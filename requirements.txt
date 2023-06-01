@@ -1,0 +1,14 @@
+transformers
+torch
+bitsandbytes
+flamingo_pytorch
+pillow
+accelerate
+datasets
+rich
+tensorboard
+wandb
+boto3
+lion-pytorch
+wandb
+fairscale

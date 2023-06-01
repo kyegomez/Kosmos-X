@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  training:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: your_image_name
+    environment:
+
+    # volumes:
+    #   - /path/to/your/s3/bucket:/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
