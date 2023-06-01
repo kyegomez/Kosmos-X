@@ -156,13 +156,17 @@ I had to make some slight changes to the decoder to allow it to accept already e
 ```
 
 ### Training
-Since we have neither the data nor the capacity to do actual training, the details of the training process are omitted here (even though these might be the most interesting parts of the paper). We provide
-code for a very simple single dataset training loop using [accelerate](https://github.com/huggingface/accelerate) in `train_kosmos.py`. This part is still very much WIP.
+
+* We're actively seeking cloud providers or grant providers to train this all-new revolutionary model and release it open source, if you would like to learn more please email me at kye@apac.ai
+
 
 ### TODO
 
--Train right now on VQA dataset and make sure that it works
+* Integrate flash attention inside the `torchscale/component/multihead_attention.py`
 
-- Integrate Flash MultiHead Attention, with xpos, and alibipos in attention in torchscale for fast and ultra long sequences
+* Look into integrating qk_norm
 
-- Prepare datasets, training strategies, and infrastructure for massive production level traning
+* Prepare datasets, training strategies, and infrastructure for massive production level traning
+
+* Run tests and make sure trains well with all optimizations on small dataset
+
