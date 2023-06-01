@@ -17,13 +17,6 @@ git clone https://github.com/NVIDIA/apex
 cd apex
 pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
 
-# Kosmos-X
-git clone https://github.com/kyegomez?tab=repositories
-cd Kosmos-X
-pip install -r requirements.txt
-cd training
-python3 train_kosmos.py
-
 ```
 
 ## The model
