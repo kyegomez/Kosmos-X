@@ -164,6 +164,8 @@ I had to make some slight changes to the decoder to allow it to accept already e
 
 * Integrate flash attention inside the `torchscale/component/multihead_attention.py`
 
+* Integrate one write head is all you need
+
 * Look into integrating qk_norm
 
 * Prepare datasets, training strategies, and infrastructure for massive production level traning
