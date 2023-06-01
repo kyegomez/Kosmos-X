@@ -7,7 +7,7 @@ with Language Models](https://arxiv.org/pdf/2302.14045.pdf). Since the code is y
 [microsoft/unilm](https://github.com/microsoft/unilm), this is an attempt to follow what is described in the paper as close as possible.
 
 ## Installation
-This repo requires [apex](https://github.com/NVIDIA/apex#from-source) and [torchscale](https://github.com/microsoft/torchscale) to be installed from source:
+This repo requires [apex](https://github.com/NVIDIA/apex#from-source) to be installed from source:
 ```bash
 # Basic requirements (transformers, torch, etc.)
 pip install -r requirements.txt
@@ -167,6 +167,8 @@ I had to make some slight changes to the decoder to allow it to accept already e
 * Integrate one write head is all you need
 
 * Look into integrating qk_norm
+
+* Look into integrating Falcon LLM model tokenizer if they allow special tokens
 
 * Prepare datasets, training strategies, and infrastructure for massive production level traning
 
