@@ -171,7 +171,7 @@ def TrainKosmos():
 
     model = Kosmos()
 
-    optim = Lion(model.parameters(), lr=1e-4, weight_decay=1e-2)
+    optim = Lion(model.parameters(), lr=1e-4, weight_decay=1e-2, use_triton=True)
 
 
 

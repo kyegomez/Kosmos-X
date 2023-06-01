@@ -87,6 +87,7 @@ Prose: BookCorpus2, Books3, Gutenberg, CC-Stories
 Additionally, consider incorporating the following datasets to enhance the model's multimodal capabilities:
 
 ImageNet
+FalconDataset
 COCO
 CUB-200-2011
 SST
