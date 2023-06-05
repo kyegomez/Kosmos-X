@@ -10,6 +10,7 @@ from PIL import Image
 from torch.nn import Embedding, Module
 import bitsandbytes
 
+#use segment anything dataset as finetuning
 
 """Action items:
 
@@ -22,7 +23,7 @@ class KosmosTokenizer:
     def __init__(self):
         self.processor = CLIPProcessor.from_pretrained("laion/CLIP-ViT-L-14-laion2B-s32B-b82K")
 
-        # T5 uses SentencePiece tokenizer
+        # T5 uses SentencePiece tokenizer => switch to falcon or tokenmonster
         self.tokenizer = T5Tokenizer.from_pretrained(
             "t5-large",
             additional_special_tokens=["<image>", "</image>"],
