@@ -41,7 +41,7 @@ from utils.stable_adamw import StableAdamWUnfused
 
 from model import Kosmos, KosmosTokenizer
 
-
+from torchscale.architecture import Decoder
 
 
 
@@ -96,7 +96,8 @@ def activation_checkpointing(
     """
     if accelerator is not None:
         accelerator.print(f"Using activation checkpointing")
-    check_fn = lambda submodule: isinstance(submodule, TransformerWrapper)
+    #maybe error here in decoder, use parallel transformer block
+    check_fn = lambda submodule: isinstance(submodule, Decoder)
     non_reentrant_wrapper = partial(
         checkpoint_wrapper,
         offload_to_cpu=offload_to_cpu,
@@ -133,14 +134,14 @@ def fsdp(
         torch.nn.Module: The input model wrapped with FSDP.
     """
     if auto_wrap:
-        palm_auto_wrap_policy = partial(
+        kosmos_auto_wrap_policy = partial(
             transformer_auto_wrap_policy,
             transformer_layer_cls={
-                TransformerWrapper,
+                Decoder,
             },
         )
     else:
-        palm_auto_wrap_policy = None
+        kosmos_auto_wrap_policy = None
 
     if mp == "bf16":
         mp_fsdp = MixedPrecision(
@@ -188,7 +189,7 @@ def fsdp(
 
     model = FullyShardedDataParallel(
         model,
-        auto_wrap_policy=palm_auto_wrap_policy,
+        auto_wrap_policy=kosmos_auto_wrap_policy,
         mixed_precision=mp_fsdp,
         backward_prefetch=BackwardPrefetch.BACKWARD_PRE,
         sharding_strategy=sharding_strat_fsdp,
