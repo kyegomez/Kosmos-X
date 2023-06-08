@@ -2,7 +2,7 @@ import torch
 from torchscale.architecture.config import DecoderConfig
 from torchscale.architecture.decoder import Decoder
 from torchscale.component.embedding import PositionalEmbedding
-from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast
+from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast, AutoTokenizer
 from tokenizers import SentencePieceBPETokenizer
 
 from flamingo_pytorch import PerceiverResampler
@@ -24,12 +24,22 @@ class KosmosTokenizer:
         self.processor = CLIPProcessor.from_pretrained("laion/CLIP-ViT-L-14-laion2B-s32B-b82K")
 
         # T5 uses SentencePiece tokenizer => switch to falcon or tokenmonster
-        self.tokenizer = T5Tokenizer.from_pretrained(
-            "t5-large",
+        # self.tokenizer = T5Tokenizer.from_pretrained(
+        #     "t5-large",
+        #     additional_special_tokens=["<image>", "</image>"],
+        #     extra_ids=0,
+        #     model_max_length=1984
+        # )
+        
+        #maybe this will work
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            "EleutherAI/gpt-neox-20b",
             additional_special_tokens=["<image>", "</image>"],
             extra_ids=0,
-            model_max_length=1984
+            model_max_length=8192
         )
+
+
         self.im_idx, self.im_end_idx = self.tokenizer.convert_tokens_to_ids(["<image>", "</image>"])
 
     def tokenize_texts(self, texts):
@@ -91,7 +101,12 @@ class Kosmos(Module):
             xpos_rel_pos=True,
             multiway=True,
             max_rel_pos=2048,
+            alibi_pos_bias=True,
             # flash_attention=True
+            # qk_norm=True
+            #one_quert_write_head=True
+            alibi_num_heads=16,
+
         )
         self.decoder = Decoder(
             self.config,
