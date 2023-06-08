@@ -127,9 +127,9 @@ class MultiheadAttention(nn.Module):
         self_attention=False,
         encoder_decoder_attention=False,
         subln=False,
-        flash_attn=False,
+        # flash_attn=False,
         alibi_pos=False,
-        one_write_head=False,
+        # one_write_head=False,
     ):
         super().__init__()
         self.args = args
@@ -168,82 +168,82 @@ class MultiheadAttention(nn.Module):
         nn.init.constant_(self.out_proj.bias, 0.0)
 
 
-    def flash_attn(
-        self,
-        q, k, v,
-        mask=None,
-        attn_bias=None
-    ):
-        batch, heads, q_len, _, k_len, is_cuda, device = *q.shape, k.shape[-2], q.is_cuda, q.device
+    # def flash_attn(
+    #     self,
+    #     q, k, v,
+    #     mask=None,
+    #     attn_bias=None
+    # ):
+    #     batch, heads, q_len, _, k_len, is_cuda, device = *q.shape, k.shape[-2], q.is_cuda, q.device
 
-        #recommended for multi query single key value attention
-        #kv shape torch.Size([1, 512, 64]) -> torch.Size([1, 8, 512, 64])
+    #     #recommended for multi query single key value attention
+    #     #kv shape torch.Size([1, 512, 64]) -> torch.Size([1, 8, 512, 64])
 
-        if k.ndim == 3:
-            k = rearrange(k, 'b ... -> b 1 ...').expand_as(q)
-        if v.ndim == 3:
-            v = rearrange(v, 'b ... -> b 1 ...').expand_as(q)
+    #     if k.ndim == 3:
+    #         k = rearrange(k, 'b ... -> b 1 ...').expand_as(q)
+    #     if v.ndim == 3:
+    #         v = rearrange(v, 'b ... -> b 1 ...').expand_as(q)
 
-        #handle scale by default they scale by dim_head ** -0.5 but need to take care if using cosine sim attention
+    #     #handle scale by default they scale by dim_head ** -0.5 but need to take care if using cosine sim attention
 
-        if self.qk_norm:
-            default_scale = q.shape[-1] ** -0.5
-            q = q * (default_scale / self.scale)
+    #     if self.qk_norm:
+    #         default_scale = q.shape[-1] ** -0.5
+    #         q = q * (default_scale / self.scale)
 
-        #check if mask exists and expand to compatible shape
-        #the mask is B L so it would have to be expanded to B H N L
+    #     #check if mask exists and expand to compatible shape
+    #     #the mask is B L so it would have to be expanded to B H N L
 
-        casual = casual
+    #     casual = casual
 
-        if exists(mask):
-            assert mask.ndim == 4
-            mask = mask.expand(batch, heads, q_len, k_len)
+    #     if exists(mask):
+    #         assert mask.ndim == 4
+    #         mask = mask.expand(batch, heads, q_len, k_len)
 
-            #manually handle casual mask, if another mask was given
+    #         #manually handle casual mask, if another mask was given
             
-            if casual:
-                casual_mask = torch.ones((q_len, k_len), dtype = torch.bool, device=device).triu(k_len - q_len + 1)
-                mask = mask | casual_mask
-                casual = False
+    #         if casual:
+    #             casual_mask = torch.ones((q_len, k_len), dtype = torch.bool, device=device).triu(k_len - q_len + 1)
+    #             mask = mask | casual_mask
+    #             casual = False
         
-        #handle alibi positional bias
-        #convet from bool to gloat
+    #     #handle alibi positional bias
+    #     #convet from bool to gloat
         
-        if exists(attn_bias):
-            attn_bias = rearrange(attn_bias, 'h i j -> 1 h i j').expand(batch, -1, -1, -1)
+    #     if exists(attn_bias):
+    #         attn_bias = rearrange(attn_bias, 'h i j -> 1 h i j').expand(batch, -1, -1, -1)
 
-            #if mask given, the mask would already contain the casual_mask from above logic
-            #otherwise if no mask given but still contain casual, mask out alibi positional bias to a large negative number
+    #         #if mask given, the mask would already contain the casual_mask from above logic
+    #         #otherwise if no mask given but still contain casual, mask out alibi positional bias to a large negative number
 
-            mask_value = - torch.finfo(q.dtype).max
+    #         mask_value = - torch.finfo(q.dtype).max
 
-            if exists(mask):
-                attn_bias = attn_bias.masked_fill(mask, mask_value // 2)
-            elif casual:
-                casual_mask = torch.ones((q_len, k_len), dtype = torch.bool, device = device).triu(k_len - q_len + 1)
-                attn_bias = attn_bias.masked_fill(casual_mask, mask_value // 2)
-                casual = False
-            #scaled_dot_product_attention handles attn_mask either as bool or additive vias
-            #make it an addiitve bias
+    #         if exists(mask):
+    #             attn_bias = attn_bias.masked_fill(mask, mask_value // 2)
+    #         elif casual:
+    #             casual_mask = torch.ones((q_len, k_len), dtype = torch.bool, device = device).triu(k_len - q_len + 1)
+    #             attn_bias = attn_bias.masked_fill(casual_mask, mask_value // 2)
+    #             casual = False
+    #         #scaled_dot_product_attention handles attn_mask either as bool or additive vias
+    #         #make it an addiitve bias
 
-            mask = attn_bias
+    #         mask = attn_bias
 
         
-        #checlk if there is a compatible device for flash attention
+    #     #checlk if there is a compatible device for flash attention
 
-        config = self.cuda_config if is_cuda else self.cpu_config
+    #     config = self.cuda_config if is_cuda else self.cpu_config
 
-        #pytorch 2.0a flash attention: q, k, v, mask, dropout, casual, softmax_scale
+    #     #pytorch 2.0a flash attention: q, k, v, mask, dropout, casual, softmax_scale
 
-        with torch.backends.cuda.sdp_kernel(**config._asdict()):
-            out = F.scaled_dot_product_attention(
-                q, k, v,
-                attn_mask = mask,
-                dropout_p = self.dropout if self.training else 0.,
-                is_casual = casual
-            )
+    #     with torch.backends.cuda.sdp_kernel(**config._asdict()):
+    #         out = F.scaled_dot_product_attention(
+    #             q, k, v,
+    #             attn_mask = mask,
+    #             dropout_p = self.dropout if self.training else 0.,
+    #             is_casual = casual
+    #         )
 
-        return out, Intermediates()
+    #     return out, Intermediates()
     
 
     def forward(
