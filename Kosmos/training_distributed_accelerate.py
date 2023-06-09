@@ -44,7 +44,7 @@ from transformers import (AutoTokenizer, default_data_collator,
 from utils.stable_adamw import StableAdamWUnfused
 
 # constants
-from Kosmos.model import Kosmos
+from model import Kosmos
 
 
 class CFG:
