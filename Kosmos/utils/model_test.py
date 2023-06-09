@@ -1,5 +1,5 @@
 import torchvision.transforms as transforms
-from Kosmos.model import KosmosTokenizer, Kosmos
+from ..model import KosmosTokenizer, Kosmos
 from PIL import Image
 
 #random text
