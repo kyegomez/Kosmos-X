@@ -1,5 +1,7 @@
 import torchvision.transforms as transforms
+
 from ..model import Kosmos, KosmosTokenizer
+
 from PIL import Image
 
 #random text
@@ -8,6 +10,7 @@ text = "This is a sample text"
 
 #laod a sample image
 image_path = "galaxy-andromeda.jpeg"
+
 image = Image.open(image_path)
 transform = transforms.Compose([transforms.Resize((1024, 1024)), transforms.ToTensor()])
 image = transform(image)
@@ -30,3 +33,4 @@ output = model.forward(
 )
 
 print(output)
+
