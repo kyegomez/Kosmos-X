@@ -10,5 +10,4 @@ tensorboard
 wandb
 boto3
 lion-pytorch
-wandb
 fairscale
