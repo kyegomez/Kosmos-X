@@ -39,7 +39,7 @@ from transformers import (AutoTokenizer, default_data_collator,
 
 from utils.stable_adamw import StableAdamWUnfused
 
-from model import Kosmos, KosmosTokenizer
+from Kosmos.model import Kosmos, KosmosTokenizer
 
 from torchscale.architecture import Decoder
 

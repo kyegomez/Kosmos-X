@@ -3,7 +3,7 @@ import argparse
 from itertools import chain
 from datasets import load_dataset
 from transformers import AutoTokenizer
-from model import KosmosTokenizer
+from Kosmos.model import KosmosTokenizer
 #falcon tokenizer
 """
 Falcon dataset 
