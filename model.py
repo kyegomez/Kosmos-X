@@ -1,7 +1,12 @@
 import torch
-from torchscale.architecture.config import DecoderConfig
-from torchscale.architecture.decoder import Decoder
-from torchscale.component.embedding import PositionalEmbedding
+# from torchscale.architecture.config import DecoderConfig
+# from torchscale.architecture.config import DecoderConfig
+from .torchscale.torchscale.architecture.config import DecoderConfig
+from .torchscale.torchscale.architecture.decoder import Decoder
+from .torchscale.torchscale.component.embedding import PositionalEmbedding
+# from torchscale.architecture.decoder import Decoder
+# from torchscale.component.embedding import PositionalEmbedding
+
 from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast, AutoTokenizer
 from tokenizers import SentencePieceBPETokenizer
 
@@ -35,6 +40,8 @@ class KosmosTokenizer:
         self.tokenizer = AutoTokenizer.from_pretrained(
             "EleutherAI/gpt-neox-20b",
             additional_special_tokens=["<image>", "</image>"],
+            eos_token ="<eos>",
+            pad_token="<pad>",
             extra_ids=0,
             model_max_length=8192
         )
