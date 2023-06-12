@@ -1,14 +1,14 @@
 # Agora
 Agora is an new open source Multi-Modality AI Research Organization devoted to advancing Humanity!
 
-![Agora banner](Kosmos-X-banner.png)
+![Agora banner](agora-banner.png)
 
 [Join our Agora discord and contribute to this project or 40+ others!](https://discord.gg/qUtxnK2NMf)
 
 
 # KOSMOS-1 Multimodal LLM
 
-![Kosmos by apac.ai](kosmos-banner.png)
+![Agora banner](Kosmos-X-banner.png)
 
 This repository is a rudimentary reimplementation of the KOSMOS-1 model described in Microsofts recent paper [Language Is Not All You Need: Aligning Perception
 with Language Models](https://arxiv.org/pdf/2302.14045.pdf). Since the code is yet to be published at
