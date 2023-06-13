@@ -14,6 +14,9 @@ This repository is a rudimentary reimplementation of the KOSMOS-1 model describe
 with Language Models](https://arxiv.org/pdf/2302.14045.pdf). Since the code is yet to be published at
 [microsoft/unilm](https://github.com/microsoft/unilm), this is an attempt to follow what is described in the paper as close as possible.
 
+# Model Roadmap
+[Help us create an Model Roadmap on Kosmos-X Figma](https://www.figma.com/file/z3sNPzuB3thdOKT7oml6NI/Kosmos-X?type=whiteboard&node-id=1%3A142&t=Z37mybFxYALukurx-1)
+
 ## Installation
 This repo requires [apex](https://github.com/NVIDIA/apex#from-source) to be installed from source:
 ```bash
