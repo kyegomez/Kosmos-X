@@ -1,6 +1,6 @@
-# Pre-training Testing Suite SOP for Transformer LLMs
+# Pre-training Testing Suite SOP for Kosmos-X Transformer LLMs
 
-The following Standard Operating Procedure (SOP) outlines the process and checkpoints needed to evaluate and test a Language Learning Model (LLM) based on a Transformer architecture before pretraining. Following these steps will help ensure the model is ready for training and will operate as expected.
+This Standard Operating Procedure (SOP) outlines the process and checkpoints needed to evaluate and test a Language Learning Model (LLM) based on the Kosmos-X Transformer architecture before pretraining. Following these steps will help ensure the model is ready for training and will operate as expected.
 
 ## 1. Model Architecture Review
 - Confirm the model architecture aligns with the specific NLP task. 
@@ -36,29 +36,33 @@ The following Standard Operating Procedure (SOP) outlines the process and checkp
 ## 9. Reproducibility Test
 - Set random seeds for all components that introduce randomness to ensure the model training is reproducible.
 
-### Pre-training Testing Suite Example
+### Pre-training Testing Suite for Kosmos-X
 
 ```python
 import unittest
 import torch
 import torch.optim as optim
 
-class PretrainingTest(unittest.TestCase):
+class KosmosXTest(unittest.TestCase):
 
     def setUp(self):
-        self.model = Andromeda
+        self.model = Kosmos()
+        self.tokenizer = KosmosTokenizer()
         self.optimizer = optim.Adam(self.model.parameters())
         self.loss_function = torch.nn.CrossEntropyLoss()
-        self.input_tensor = torch.randint(0, 256, (1, 1024)).cuda()
+        self.input_text = ["<image>", "</image>"]
+        self.input_images = torch.randn(1, 3, 224, 224)
 
     def test_forward_pass(self):
-        output = self.model(self.input_tensor)
+        tokenized_input = self.tokenizer.tokenize_texts(self.input_text)
+        output = self.model(*tokenized_input, self.input_images)
         self.assertEqual(output.shape, (1, 1024, 64007))  # Verify output shape
 
     def test_backward_pass(self):
         self.optimizer.zero_grad()
-        output = self.model(self.input_tensor)
-        loss = self.loss_function(output, self.input_tensor)
+        tokenized_input = self.tokenizer.tokenize_texts(self.input_text)
+        output = self.model(*tokenized_input, self.input_images)
+        loss = self.loss_function(output.squeeze(), tokenized_input[0])
         loss.backward()
         for name, parameter in self.model.named_parameters():
             self.assertFalse(torch.isnan(parameter.grad).any(), f'Gradient for {name} contains NaNs')
@@ -66,8 +70,9 @@ class PretrainingTest(unittest.TestCase):
 
     def test_optimizer_step(self):
         initial_params = [param.clone() for param in self.model.parameters()]
-        output = self.model(self.input_tensor)
-        loss = self.loss_function(output, self.input_tensor)
+        tokenized_input = self.tokenizer.tokenize_texts(self.input_text)
+        output = self.model(*tokenized_input, self.input_images)
+        loss = self.loss_function(output.squeeze(), tokenized_input[0])
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
@@ -89,6 +94,10 @@ class PretrainingTest(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 ```
+
+Note: Implement the `test_data_loader`, `test_learning_rate_scheduler`, `test_hardware_compatibility`, and `test_reproducibility` methods according to your specific setup and requirements.
+
+This SOP will help you systematically ensure your Kosmos-X model is ready for pre-training. Be sure to adjust as necessary for the specifics of your model and training environment.
 
 # Metrics
 
