@@ -5,7 +5,7 @@ from einops._torch_specific import allow_ops_in_compiled_graph
 import argparse
 
 
-def main():
+def Inference():
     allow_ops_in_compiled_graph()
 
     torch.hub._validate_not_a_forked_repo = lambda a, b, c: True
@@ -72,6 +72,6 @@ def main():
 
 
 if __name__ == "__main__":
-    generated_text = main()
+    generated_text = Inference()
     for text in generated_text:
         print(f"{text}")
