@@ -1,74 +1,79 @@
-import torch
-# from torchscale.architecture.config import DecoderConfig
-from torchscale.architecture.config import DecoderConfig
-from torchscale.architecture.decoder import Decoder
-from torchscale.component.embedding import PositionalEmbedding
 
+# Remaining imports
+import logging
+import torch
+from torch.nn import Embedding, Module
 from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast, AutoTokenizer
 from tokenizers import SentencePieceBPETokenizer
 
 from flamingo_pytorch import PerceiverResampler
 from PIL import Image
-from torch.nn import Embedding, Module
-import bitsandbytes
 
-#use segment anything dataset as finetuning
-
-"""Action items:
-
-Check system paths and update them if necessary.
-Check if the main CUDA library is installed and update it if necessary.
-Investigate the error related to 'WindowsPath' not being iterable in the DA setup."""
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
+# Check if the modules are available
+try:
+    from torchscale.architecture.config import DecoderConfig
+    from torchscale.architecture.decoder import Decoder
+    from torchscale.component.embedding import PositionalEmbedding
+    import bitsandbytes
+except ImportError as e:
+    logging.error(f"Failed to import module: {e}")
+    raise
+
+# Implement classes with type hints and error handling
 class KosmosTokenizer:
     def __init__(self):
-        self.processor = CLIPProcessor.from_pretrained("laion/CLIP-ViT-L-14-laion2B-s32B-b82K")
-
-        # T5 uses SentencePiece tokenizer => switch to falcon or tokenmonster
-        # self.tokenizer = T5Tokenizer.from_pretrained(
-        #     "t5-large",
-        #     additional_special_tokens=["<image>", "</image>"],
-        #     extra_ids=0,
-        #     model_max_length=1984
-        # )
-        
-        #maybe this will work
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            "EleutherAI/gpt-neox-20b",
-            additional_special_tokens=["<image>", "</image>"],
-            eos_token ="<eos>",
-            pad_token="<pad>",
-            extra_ids=0,
-            model_max_length=8192
-        )
-
-        # if self.tokenizer.pad_token is None:
-        #     self.tokenizer.pad_token = self.tokenize.eos_token
-
+        try:
+            self.processor = CLIPProcessor.from_pretrained("laion/CLIP-ViT-L-14-laion2B-s32B-b82K")
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                "EleutherAI/gpt-neox-20b",
+                additional_special_tokens=["<image>", "</image>"],
+                eos_token="<eos>",
+                pad_token="<pad>",
+                extra_ids=0,
+                model_max_length=8192
+            )
+        except Exception as e:
+            logging.error(f"Failed to initialize KosmosTokenizer: {e}")
+            raise
 
         self.im_idx, self.im_end_idx = self.tokenizer.convert_tokens_to_ids(["<image>", "</image>"])
 
-    def tokenize_texts(self, texts):
-        texts =  self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True).input_ids
-        # Add image tokens to text as "<s> <image> </image> text </s>"
-        image_tokens = torch.tensor([[self.im_idx, self.im_end_idx]] * texts.shape[0])
-        return torch.cat([texts[:, 0:1], image_tokens, texts[:, 1:]], dim=1), texts
+    def tokenize_texts(self, texts: str):
+        try:
+            texts =  self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True).input_ids
+            # Add image tokens to text as "<s> <image> </image> text </s>"
+            image_tokens = torch.tensor([[self.im_idx, self.im_end_idx]] * texts.shape[0])
+            return torch.cat([texts[:, 0:1], image_tokens, texts[:, 1:]], dim=1), texts
+        except Exception as e:
+            logging.error(f"Failed to tokenize texts: {e}")
+            raise
 
     def tokenize_images(self, images):
-        return self.processor(images=images, return_tensors="pt").pixel_values
+        try:
+            return self.processor(images=images, return_tensors="pt").pixel_values
+        except Exception as e:
+            logging.error(f"Failed to tokenize images: {e}")
+            raise
 
     def tokenize(self, sample):
-        text_tokens, only_text_tokens = self.tokenize_texts(sample["target_text"])
-        attention_mask = text_tokens != self.tokenizer.pad_token_id
-        dummy_image_features = torch.ones((text_tokens.shape[0], 64))
-        attention_mask = torch.cat([dummy_image_features, attention_mask], dim=1)
-        return {
-            "text_tokens": text_tokens,
-            "images": self.tokenize_images(sample["image"]),
-            "labels": only_text_tokens,
-            "attention_mask": attention_mask,
-        }
+        try:
+            text_tokens, only_text_tokens = self.tokenize_texts(sample["target_text"])
+            attention_mask = text_tokens != self.tokenizer.pad_token_id
+            dummy_image_features = torch.ones((text_tokens.shape[0], 64))
+            attention_mask = torch.cat([dummy_image_features, attention_mask], dim=1)
+            return {
+                "text_tokens": text_tokens,
+                "images": self.tokenize_images(sample["image"]),
+                "labels": only_text_tokens,
+                "attention_mask": attention_mask,
+            }
+        except Exception as e:
+            logging.error(f"Failed to tokenize sample: {e}")
+            raise
+
 
 class Kosmos(Module):
     def __init__(self):
