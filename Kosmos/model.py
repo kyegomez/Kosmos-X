@@ -25,6 +25,16 @@ except ImportError as e:
 
 # Implement classes with type hints and error handling
 class KosmosTokenizer:
+    """
+    A tokenizer class for the kosmos model
+
+    Attributes:
+        processor(CLIPProcessor): The processor to tokenize images
+        tokenizer: (AutoTokenizer): The tokenizer to tokenize text 
+        im_idx: (int): The Index of the "<image>" token.
+        im_end_idx (int): The index of the "</image>" token.
+    """
+
     def __init__(self):
         try:
             self.processor = CLIPProcessor.from_pretrained("laion/CLIP-ViT-L-14-laion2B-s32B-b82K")
@@ -43,6 +53,16 @@ class KosmosTokenizer:
         self.im_idx, self.im_end_idx = self.tokenizer.convert_tokens_to_ids(["<image>", "</image>"])
 
     def tokenize_texts(self, texts: str):
+        """
+        Tokenize given texts.
+
+        Args:
+            Texts (str): The Text to be tokenized
+
+        
+        Returns:
+            A tuple containing the tokenized texts and only the text tokens.
+        """
         try:
             texts =  self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True).input_ids
             # Add image tokens to text as "<s> <image> </image> text </s>"
@@ -53,6 +73,16 @@ class KosmosTokenizer:
             raise
 
     def tokenize_images(self, images):
+        """
+        Tokenizes given images.
+
+        Args:
+            images: The images to be tokenized
+
+        Returns:
+            The tokenized images.
+        
+        """
         try:
             return self.processor(images=images, return_tensors="pt").pixel_values
         except Exception as e:
@@ -60,6 +90,16 @@ class KosmosTokenizer:
             raise
 
     def tokenize(self, sample):
+        """
+        Tokenizes given sample.
+
+        Args:
+            Sample: The sample to be tokenized
+
+        Returns:
+            A dictionary containing the tokenized text tokens, images, labels, and attention mask.
+        
+        """
         try:
             text_tokens, only_text_tokens = self.tokenize_texts(sample["target_text"])
             attention_mask = text_tokens != self.tokenizer.pad_token_id
@@ -76,6 +116,22 @@ class KosmosTokenizer:
             raise
 
 class Kosmos(nn.Module):
+    """
+    The main Kosmos model class.
+
+    Attributes:
+        clip_model (CLIPModel): The CLIP model for image processing.
+        embed (Embedding): The embedding layer for tokens.
+        embed_positions: (PositionEmbedding): The positional embedding layer.
+        
+        output_projection (Linear): the output projection layer.
+        config (DecoderConfig): The configuration for the decoder
+        decoder (Decoder): The decoder module
+
+        perceieve(PerceiverResampler): The PerceieverResampler module for image processing.
+        image_proj (Linear): The image projection layer.
+    """
+
     def __init__(self):
         super().__init__()
 
@@ -134,6 +190,17 @@ class Kosmos(nn.Module):
         nn.init.normal_(self.image_proj.weight, mean=0, std=2048**-0.5)
 
     def forward(self, text_tokens: torch.Tensor, images: torch.Tensor, **kwargs):
+        """
+       The forward pass for the Kosmos model.
+
+       Args:
+            text_tokens (torch.Tensor): The text tokens.
+            images (torch.Tensor): The image tokens.
+
+        Returns:
+            The output of the decoder 
+        
+        """
         if not isinstance(text_tokens, torch.Tensor) or not isinstance(images, torch.Tensor):
             raise TypeError("text_tokens and images must be instances of torch.Tensor")
 
