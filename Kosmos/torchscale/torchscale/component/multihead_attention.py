@@ -237,11 +237,8 @@ class MultiheadAttention(nn.Module):
 
         
         #check if there is a compatible device for flash attention
-
         config = self.cuda_config if is_cuda else self.cpu_config
-
         #pytorch 2.0a flash attention: q, k, v, mask, dropout, casual, softmax_scale
-
         with torch.backends.cuda.sdp_kernel(**config._asdict()):
             out = F.scaled_dot_product_attention(
                 q, k, v,
@@ -285,8 +282,6 @@ class MultiheadAttention(nn.Module):
         v = v.reshape(bsz * self.num_heads, src_len, self.head_dim)
 
         # assert not (alibi_pos_bias), 
-
-
         if incremental_state is not None:
             if "prev_key" in incremental_state:
                 prev_key = incremental_state["prev_key"].view(
