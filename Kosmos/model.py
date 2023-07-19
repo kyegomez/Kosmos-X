@@ -225,3 +225,54 @@ class Kosmos(nn.Module):
         except Exception as e:
             logging.error(f"Failed during model forward pass: {e}")
             raise
+
+
+
+class KosmosLanguage(Module):
+    def __init__(self):
+        super().__init__()
+        self.embed = bitsandbytes.nn.modules.Embedding(
+            320002,
+            2048,
+            padding_idx=1
+        )
+
+        self.embed_positions = PositionalEmbedding(
+            2048,
+            2048,
+            1
+        )
+
+        self.output_projection = torch.nn.Linear(
+            2048, 32002, bias=False
+        )
+
+        # Config following KOSMOS-1 paper (https://arxiv.org/pdf/2302.14045.pdf)
+        self.config = DecoderConfig(
+            decoder_layers=24,
+            decoder_embed_dim=2048,
+            decoder_ffn_embed_dim=8192,
+            decoder_attention_heads=32,
+            dropout=0.1,
+            activation_fn="gelu",
+            attention_dropout=0.1,
+            vocab_size=64007,
+            subln=True,
+            xpos_rel_pos=True,
+            multiway=True,
+            max_rel_pos=2048,
+            alibi_pos_bias=True,
+            alibi_num_heads=16,
+        )
+        
+        self.decoder = Decoder(
+            self.config,
+            embed_tokens=self.embed,
+            embed_positions=self.embed_positions,
+            output_projection=self.output_projection
+        )
+
+
+    def forward(self, text_tokens, **kwargs):
+        model_input = self.decoder.forward_embedding(text_tokens)[0]
+        return self.decoder(model_input, passed_x=model_input)[0]
