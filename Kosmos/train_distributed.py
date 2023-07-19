@@ -646,5 +646,19 @@ def main():
             )
 
 
+
+def main():
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '9994'
+    
+    # [CRITICAL] Pay attention to this when scaling to multiple GPUs and clusters
+    
+    os.environ['RANK']       = str(0) # Number of nodes (servers)
+    os.environ['WORLD_SIZE'] = str(torch.cuda.device_count())
+
+    torch.distributed.init_process_group()
+    
+    main()
+
 if __name__ == "__main__":
     main()
