@@ -18,9 +18,6 @@ from accelerate.utils import (DummyOptim, DummyScheduler,
 from datasets import concatenate_datasets, load_dataset
 from lion_pytorch import Lion
 
-# from palm_rlhf_pytorch import PaLM
-# from palm_rlhf_pytorch.palm import LayerNorm, ParallelTransformerBlock
-# from torchscale.architecture import MultiHead
 from torchscale.architecture.decoder import Decoder
 
 from torch.nn import LayerNorm
@@ -40,10 +37,8 @@ from transformers import (AutoTokenizer, default_data_collator,
                           get_cosine_schedule_with_warmup,
                           get_linear_schedule_with_warmup, set_seed)
 
-# from palm.stable_adamw import StableAdamWUnfused
 from utils.stable_adamw import StableAdamWUnfused
 
-# constants
 from Kosmos.model import Kosmos
 
 
@@ -478,14 +473,6 @@ def main():
 
     set_seed(CFG.SEED)
 
-    # instantiate palm
-
-    # 410m
-    # model = PaLM(
-    #     num_tokens=50304, dim=1024, depth=24, dim_head=128, heads=8, flash_attn=True, #qk_rmsnorm = True,
-    # ).to(accelerator.device)
-
-    # 1B
     model = Kosmos()
 
     print_num_params(model, accelerator)
