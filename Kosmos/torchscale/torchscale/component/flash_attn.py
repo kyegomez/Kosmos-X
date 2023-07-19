@@ -8,7 +8,7 @@ from einops import rearrange
 
 # constants
 
-EPSILON = 1e-6
+EPSILON = 1e-10
 
 # helper functions
 
@@ -20,13 +20,14 @@ def default(val, d):
 
 # flash attention forwards and backwards
 
-# https://arxiv.org/abs/2205.14135
+# flash attention v1 - https://arxiv.org/abs/2205.14135
+# flash attention v2 - https://tridao.me/publications/flash2/flash2.pdf
 
 class FlashAttentionFunction(Function):
     @staticmethod
     @torch.no_grad()
     def forward(ctx, q, k, v, mask, causal, q_bucket_size, k_bucket_size):
-        """ Algorithm 2 in the paper """
+        """ Algorithm 1 in the v2 paper """
 
         device = q.device
         max_neg_value = -torch.finfo(q.dtype).max
@@ -81,24 +82,22 @@ class FlashAttentionFunction(Function):
                     attn_weights.masked_fill_(causal_mask, max_neg_value)
 
                 block_row_maxes = attn_weights.amax(dim = -1, keepdims = True)
-                attn_weights -= block_row_maxes
-                exp_weights = torch.exp(attn_weights)
+                new_row_maxes = torch.maximum(block_row_maxes, row_maxes)
+
+                exp_weights = torch.exp(attn_weights - new_row_maxes)
 
                 if exists(col_mask):
                     exp_weights.masked_fill_(~col_mask, 0.)
 
                 block_row_sums = exp_weights.sum(dim = -1, keepdims = True).clamp(min = EPSILON)
 
-                new_row_maxes = torch.maximum(block_row_maxes, row_maxes)
-
                 exp_values = einsum('... i j, ... j d -> ... i d', exp_weights, vc)
 
                 exp_row_max_diff = torch.exp(row_maxes - new_row_maxes)
-                exp_block_row_max_diff = torch.exp(block_row_maxes - new_row_maxes)
 
-                new_row_sums = exp_row_max_diff * row_sums + exp_block_row_max_diff * block_row_sums
+                new_row_sums = exp_row_max_diff * row_sums + block_row_sums
 
-                oc.mul_(exp_row_max_diff).add_(exp_block_row_max_diff * exp_values)
+                oc.mul_(exp_row_max_diff).add_(exp_values)
 
                 row_maxes.copy_(new_row_maxes)
                 row_sums.copy_(new_row_sums)
@@ -115,7 +114,7 @@ class FlashAttentionFunction(Function):
     @staticmethod
     @torch.no_grad()
     def backward(ctx, do):
-        """ Algorithm 4 in the paper """
+        """ Algorithm 2 in the v2 paper """
 
         causal, scale, mask, q_bucket_size, k_bucket_size = ctx.args
         q, k, v, o, lse = ctx.saved_tensors
@@ -218,7 +217,6 @@ class FlashAttention(nn.Module):
         q_bucket_size = None,
         k_bucket_size = None,
     ):
-        
         q_bucket_size = default(q_bucket_size, self.q_bucket_size)
         k_bucket_size = default(k_bucket_size, self.k_bucket_size)
 
