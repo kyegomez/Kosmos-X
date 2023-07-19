@@ -11,3 +11,5 @@ wandb
 boto3
 lion-pytorch
 fairscale
+torchinfo
+pytorch-memlab
