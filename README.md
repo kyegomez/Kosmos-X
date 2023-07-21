@@ -14,9 +14,13 @@ Since Kosmos-X is ready to train Agora is actively seeking cloud providers or gr
 
 ![Agora banner](Kosmos-X-banner.png)
 
-This repository is a rudimentary reimplementation of the KOSMOS-1 model described in Microsofts recent paper [Language Is Not All You Need: Aligning Perception
-with Language Models](https://arxiv.org/pdf/2302.14045.pdf). Since the code is yet to be published at
-[microsoft/unilm](https://github.com/microsoft/unilm), this is an attempt to follow what is described in the paper as close as possible.
+Kosmos-X is an all-new State of The Art modular Multi-Modality model that can seamlessly process various forms of data like:
+
+* Images
+* Videos
+* Audio
+
+And, Kosmos-X can process these extremely long sequences of these multi-modality inputs upwards of 40,000+ context length!
 
 # Model Roadmap
 [Help us create an Model Roadmap on Kosmos-X Figma](https://www.figma.com/file/z3sNPzuB3thdOKT7oml6NI/Kosmos-X?type=whiteboard&node-id=1%3A142&t=Z37mybFxYALukurx-1)
