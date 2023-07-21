@@ -19,10 +19,8 @@ from datasets import concatenate_datasets, load_dataset
 from lion_pytorch import Lion
 
 from torch.nn import LayerNorm
-
 from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (
     CheckpointImpl, apply_activation_checkpointing, checkpoint_wrapper)
-
 from torch.distributed.fsdp.wrap import (
     transformer_auto_wrap_policy
 )
@@ -36,7 +34,6 @@ from transformers import (AutoTokenizer, default_data_collator,
                           get_linear_schedule_with_warmup, set_seed)
 
 from utils.stable_adamw import StableAdamWUnfused
-# from optimus_prime import Decoder, AutoregressiveWrapper, KosmosEmbedding, Decoder
 # import bitsandbytes as bnb
 from torchscale.torchscale.architecture.decoder import Decoder
 from model import Kosmos
