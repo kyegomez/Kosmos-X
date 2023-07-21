@@ -17,7 +17,6 @@ from accelerate.utils import (DummyOptim, DummyScheduler,
                               InitProcessGroupKwargs)
 from datasets import concatenate_datasets, load_dataset
 from lion_pytorch import Lion
-from torch.nn import LayerNorm
 
 from torch.nn import LayerNorm
 
@@ -25,7 +24,7 @@ from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (
     CheckpointImpl, apply_activation_checkpointing, checkpoint_wrapper)
 
 from torch.distributed.fsdp.wrap import (
-    transformer_auto_wrap_policy,
+    transformer_auto_wrap_policy
 )
 
 
@@ -36,24 +35,22 @@ from transformers import (AutoTokenizer, default_data_collator,
                           get_cosine_schedule_with_warmup,
                           get_linear_schedule_with_warmup, set_seed)
 
-
 from utils.stable_adamw import StableAdamWUnfused
+# from optimus_prime import Decoder, AutoregressiveWrapper, KosmosEmbedding, Decoder
+# import bitsandbytes as bnb
+from torchscale.torchscale.architecture.decoder import Decoder
+from model import Kosmos
 
-from Kosmos.model import Kosmos, KosmosTokenizer
 
-from torchscale.architecture import Decoder
+########### SETUP CONFIG
+import torch.distributed as dist
 
+# dist.init_process_group(backend='nccl') #init_method="env://")
 
-
-############ SETUP CONFIG
-# import torch.distributed as dist
-
-# dist.init_process_group(backend='nccl', init_method="env://")
-
-################
+###############
 
 class CFG:
-    BATCH_SIZE: int = 3
+    BATCH_SIZE = 3
     GRADIENT_ACCUMULATE_EVERY: int = 1
     SEED: int = 42
     LEARNING_RATE: float = 3e-4
@@ -61,19 +58,20 @@ class CFG:
     SEQ_LEN: int = 8192
     NUM_CPU: int = multiprocessing.cpu_count()
     USE_DEEPSPEED: bool = True
-    USE_FSDP: bool = False
-    USE_PRETOKENIZED: bool = False
-    USE_ACTIVATION_CHECKPOINTING: bool = False
-    RESUME_FROM_CHECKPOINT: str = None
+    USE_FSDP: bool = True
+    USE_PRETOKENIZED: bool = True
+    USE_ACTIVATION_CHECKPOINTING: bool = True
+    RESUME_FROM_CHECKPOINT: str = False
     CHECKPOINTING_STEPS: int = 1000
-    OUTPUT_DIR: str = "YOUR_OUTPUT_DIR"
-    ENTITY_NAME: str = "YOUR_ENTITY_NAME"
+    OUTPUT_DIR: str = 'checkpoints/' # Folder
+    ENTITY_NAME: str = "Kosmos"
 
 
 # helpers
 
 
 def print_num_params(model, accelerator: Accelerator):
+    # n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     accelerator.print(f"Number of parameters in model: {n_params}")
 
@@ -96,7 +94,6 @@ def activation_checkpointing(
     """
     if accelerator is not None:
         accelerator.print(f"Using activation checkpointing")
-    #maybe error here in decoder, use parallel transformer block
     check_fn = lambda submodule: isinstance(submodule, Decoder)
     non_reentrant_wrapper = partial(
         checkpoint_wrapper,
@@ -134,14 +131,14 @@ def fsdp(
         torch.nn.Module: The input model wrapped with FSDP.
     """
     if auto_wrap:
-        kosmos_auto_wrap_policy = partial(
+        Kosmos_auto_wrap_policy = partial(
             transformer_auto_wrap_policy,
             transformer_layer_cls={
                 Decoder,
             },
         )
     else:
-        kosmos_auto_wrap_policy = None
+        Kosmos_auto_wrap_policy = None
 
     if mp == "bf16":
         mp_fsdp = MixedPrecision(
@@ -189,7 +186,7 @@ def fsdp(
 
     model = FullyShardedDataParallel(
         model,
-        auto_wrap_policy=kosmos_auto_wrap_policy,
+        auto_wrap_policy=Kosmos_auto_wrap_policy,
         mixed_precision=mp_fsdp,
         backward_prefetch=BackwardPrefetch.BACKWARD_PRE,
         sharding_strategy=sharding_strat_fsdp,
@@ -379,6 +376,10 @@ def decoupled_optimizer(
         optimizer = StableAdamWUnfused(
             grouped_params, lr=learning_rate, betas=(beta_1, beta_2),
         )
+    # elif optimizer_type=="Adam8bit":
+    #     optimizer = bnb.optim.Adam8bit(grouped_params, lr=learning_rate, betas=(beta_1, beta_2))
+    # elif optimizer_type=="Lion8Bit":
+    #     optimizer = bnb.optim.Lion8bit(grouped_params, lr=learning_rate, betas=(beta_1, beta_2))
     else:
         raise ValueError(
             "Invalid optimizer_type. Expected 'lion', 'adamw', 'deepspeed' or 'stable_adamw', got: {}".format(
@@ -442,17 +443,17 @@ def build_dataloaders():
 
 #switch to falconwebdataset
 def build_pre_tokenized():
-    d0 = load_dataset("conceptofmind/c4_0-to-20_neox_with_eos_8k", split="train")
-    d1 = load_dataset("conceptofmind/c4_21-to-40_neox_with_eos_8k", split="train")
-    d2 = load_dataset("conceptofmind/c4_41-to-60_neox_with_eos_8k", split="train")
-    d3 = load_dataset("conceptofmind/c4_61-to-80_neox_with_eos_8k", split="train")
-    d4 = load_dataset("conceptofmind/c4_81-to-100_neox_with_eos_8k", split="train")
-    train_dataset = concatenate_datasets([d0, d1, d2, d3, d4])
-    return train_dataset
+    d0 = load_dataset("conceptofmind/c4_0-to-20_neox_with_eos_8k", split="train[:10]")
+    # d1 = load_dataset("conceptofmind/c4_21-to-40_neox_with_eos_8k", split="train")
+    # d2 = load_dataset("conceptofmind/c4_41-to-60_neox_with_eos_8k", split="train")
+    # d3 = load_dataset("conceptofmind/c4_61-to-80_neox_with_eos_8k", split="train")
+    # d4 = load_dataset("conceptofmind/c4_81-to-100_neox_with_eos_8k", split="train")
+    # train_dataset = concatenate_datasets([d0, d1, d2, d3, d4])
+    return d0
 
 
 
-def main():
+def Train():
     # accelerator
 
     timeout = InitProcessGroupKwargs(timeout=timedelta(seconds=1_000_000))
@@ -483,9 +484,7 @@ def main():
 
     set_seed(CFG.SEED)
 
-    # tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
-    # 
-    model = Kosmos.to(accelerator.device)
+    model = Kosmos().to(accelerator.device)
 
     print_num_params(model, accelerator)
 
@@ -499,7 +498,7 @@ def main():
     if CFG.USE_ACTIVATION_CHECKPOINTING:
         activation_checkpointing(model, accelerator)
 
-    model = accelerator.prepare(model)
+    # model = accelerator.prepare(model, train_dataloader)
 
     # dataloaders
 
@@ -512,15 +511,16 @@ def main():
         train_dataset, batch_size=CFG.BATCH_SIZE, collate_fn=default_data_collator,
     )
 
-    # optimizer
+    model = accelerator.prepare(model, train_loader)
 
+    # optimizer
     optim = decoupled_optimizer(
         model=model,
         learning_rate=CFG.LEARNING_RATE, 
         weight_decay=CFG.WEIGHT_DECAY, 
         beta_1=0.90, 
         beta_2=0.95, 
-        optimizer_type='deepspeed',  
+        optimizer_type='stable_adamw',  
         use_fsdp=True,
         accelerator=accelerator
     )
@@ -646,19 +646,20 @@ def main():
             )
 
 
-
 def main():
-    os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '9994'
+    os.environ['MASTER_ADDR'] #'localhost'
+    os.environ['MASTER_PORT'] #= '9994'
     
-    # [CRITICAL] Pay attention to this when scaling to multiple GPUs and clusters
+    # # [CRITICAL] Pay attention to this when scaling to multiple GPUs and clusters
     
-    os.environ['RANK']       = str(0) # Number of nodes (servers)
-    os.environ['WORLD_SIZE'] = str(torch.cuda.device_count())
+    # # Pay attention to this, use "accelerate config"
 
-    torch.distributed.init_process_group()
-    
-    main()
+    os.environ['RANK']       #= str(0) # Number of nodes (servers)
+    os.environ['WORLD_SIZE'] # = str(torch.cuda.device_count())
 
-if __name__ == "__main__":
+    dist.init_process_group(backend='nccl') #init_method="env://")
+    
+    Train()
+
+if __name__ == '__main__':
     main()
