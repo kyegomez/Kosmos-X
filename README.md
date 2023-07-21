@@ -1,29 +1,40 @@
-# READY FOR TRAINING!!!!!!
+# Kosmos-X: Advanced Multi-Modality AI Model 🚀🌌
 
-# Agora
-Agora is an new open source Multi-Modality AI Research Organization devoted to advancing Humanity!
+![Kosmos-X Next Generation Multi-Modality AI Model](/Kosmos-X-banner.png)
 
-Since Kosmos-X is ready to train Agora is actively seeking cloud providers or grant providers to train this all-new revolutionary model and release it open source, if you would like to learn more please email me at `kye@apac.ai`
-
-![Agora banner](agora-banner.png)
-
-[Join our Agora discord and contribute to this project or 40+ others!](https://discord.gg/qUtxnK2NMf)
-
-
-# KOSMOS-1 Multimodal LLM
-
-![Agora banner](Kosmos-X-banner.png)
-
-Kosmos-X is an all-new State of The Art modular Multi-Modality model that can seamlessly process various forms of data like:
+Kosmos-X is a groundbreaking modular Multi-Modality AI model designed to seamlessly process diverse forms of data, including:
 
 * Images
 * Videos
 * Audio
 
-And, Kosmos-X can process these extremely long sequences of these multi-modality inputs upwards of 40,000+ context length!
+The unique strength of Kosmos-X lies in its ability to process extremely long sequences of these multi-modality inputs, with context lengths of up to 40,000+!
 
-# Model Roadmap
-[Help us create an Model Roadmap on Kosmos-X Figma](https://www.figma.com/file/z3sNPzuB3thdOKT7oml6NI/Kosmos-X?type=whiteboard&node-id=1%3A142&t=Z37mybFxYALukurx-1)
+## Model Roadmap
+[Help us create a Model Roadmap on Kosmos-X Figma](https://www.figma.com/file/z3sNPzuB3thdOKT7oml6NI/Kosmos-X?type=whiteboard&node-id=1%3A142&t=Z37mybFxYALukurx-1)
+
+## Ready for Training!
+
+Kosmos-X is now ready for training, and we're actively seeking cloud providers or grant providers to collaborate in training this revolutionary model and eventually release it open source. If you're interested in learning more or supporting this endeavor, please feel free to email me at `kye@apac.ai`.
+
+---
+
+<div align="center">
+
+[![GitHub issues](https://img.shields.io/github/issues/kyegomez/Andromeda)](https://github.com/kyegomez/Andromeda/issues) [![GitHub forks](https://img.shields.io/github/forks/kyegomez/Andromeda)](https://github.com/kyegomez/Andromeda/network) [![GitHub stars](https://img.shields.io/github/stars/kyegomez/Andromeda)](https://github.com/kyegomez/Andromeda/stargazers) [![GitHub license](https://img.shields.io/github/license/kyegomez/Andromeda)](https://github.com/kyegomez/Andromeda/blob/main/LICENSE)
+
+[![Open Bounties](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Fkyegomez%2Fbounties%3Fstatus%3Dopen)](https://console.algora.io/org/kyegomez/bounties?status=open) [![Rewarded Bounties](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Fkyegomez%2Fbounties%3Fstatus%3Dcompleted)](https://console.algora.io/org/kyegomez/bounties?status=completed)
+
+[![Share on Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Share%20%40kyegomez/Andromeda)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20AI%20project:%20Andromeda&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FAndromeda) [![Share on Facebook](https://img.shields.io/badge/Share-%20facebook-blue)](https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2FAndromeda) [![Share on LinkedIn](https://img.shields.io/badge/Share-%20linkedin-blue)](https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FAndromeda&title=&summary=&source=)
+
+![Join the Agora discord](https://img.shields.io/discord/1110910277110743103?label=Discord&logo=discord&logoColor=white&style=plastic&color=d7b023)
+[![Share on Reddit](https://img.shields.io/badge/-Share%20on%20Reddit-orange)](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FAndromeda&title=Andromeda%20-%20the%20next%20generation%20AI%20shields) [![Share on Hacker News](https://img.shields.io/badge/-Share%20on%20Hacker%20News-orange)](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2FAndromeda&t=Andromeda%20-%20the%20next%20generation%20AI%20shields) [![Share on Pinterest](https://img.shields.io/badge/-Share%20on%20Pinterest-red)](https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FAndromeda&media=https%3A%2F%2Fexample.com%2Fimage.jpg&description=Andromeda%20-%20the%20next%20generation%20AI%20shields) [![Share on WhatsApp](https://img.shields.io/badge/-Share%20on%20WhatsApp-green)](https://api.whatsapp.com/send?text=Check%20out%20Andromeda%20-%20the%20next%20generation%20AI%20shields%20%23Andromeda%20%23AI%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkyegomez%2FAndromeda)
+
+</div>
+
+---
+
+Please note that this README.md has been recreated based on the provided information and may not fully reflect the actual content of the linked GitHub repository.
 
 ## Usage
 This repo requires [apex](https://github.com/NVIDIA/apex#from-source) to be installed from source:
