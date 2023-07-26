@@ -6,6 +6,8 @@ from functools import partial
 from itertools import chain
 
 import torch
+# import bitsandbytes as bnb
+
 from torch.distributed.fsdp import (
     FullyShardedDataParallel,
     MixedPrecision,
@@ -15,10 +17,14 @@ from torch.distributed.fsdp import (
 from accelerate import Accelerator
 from accelerate.utils import (DummyOptim, DummyScheduler,
                               InitProcessGroupKwargs)
+from accelerate.logging import get_logger
+
+
 from datasets import concatenate_datasets, load_dataset
 from lion_pytorch import Lion
-
 from torch.nn import LayerNorm
+
+
 from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (
     CheckpointImpl, apply_activation_checkpointing, checkpoint_wrapper)
 from torch.distributed.fsdp.wrap import (
@@ -33,24 +39,26 @@ from transformers import (AutoTokenizer, default_data_collator,
                           get_cosine_schedule_with_warmup,
                           get_linear_schedule_with_warmup, set_seed)
 
-from utils.stable_adamw import StableAdamWUnfused
-# import bitsandbytes as bnb
-from torchscale.torchscale.architecture.decoder import Decoder
-from model import Kosmos
 
+from Kosmos.utils.stable_adamw import StableAdamWUnfused
+from Kosmos.model import Decoder, Kosmos
 
 ########### SETUP CONFIG
 import torch.distributed as dist
 
-# dist.init_process_group(backend='nccl') #init_method="env://")
 
-###############
+from accelerate.state import AcceleratorState
+
+# state = AcceleratorState()
+
+
+logger = get_logger(__name__, log_level="INFO")
 
 class CFG:
-    BATCH_SIZE = 3
+    BATCH_SIZE = 1
     GRADIENT_ACCUMULATE_EVERY: int = 1
     SEED: int = 42
-    LEARNING_RATE: float = 3e-4
+    LEARNING_RATE: float = 1e-4 #3e-4 # 1e-4 for lion
     WEIGHT_DECAY: float = 0.1
     SEQ_LEN: int = 8192
     NUM_CPU: int = multiprocessing.cpu_count()
@@ -62,6 +70,7 @@ class CFG:
     CHECKPOINTING_STEPS: int = 1000
     OUTPUT_DIR: str = 'checkpoints/' # Folder
     ENTITY_NAME: str = "Kosmos"
+    LOGGING_STEPS: int = 100
 
 
 # helpers
@@ -351,8 +360,13 @@ def decoupled_optimizer(
 
     # Iterate over the no_decay list, which contains the names of the parameters without weight decay.
     for param in no_decay:
-        # Append the corresponding parameter from param_dict to the no_decay_param list.
-        no_decay_param.append(param_dict[param])
+        try:
+                
+            # Append the corresponding parameter from param_dict to the no_decay_param list.
+            no_decay_param.append(param_dict[param])
+        except KeyError:
+            # print(f"Parameter {param_name} does not exist in the model")
+            pass
 
     # Create a list called grouped_params that contains two dictionaries.
     # The first dictionary has the decay_param list and the corresponding weight_decay value.
@@ -461,8 +475,10 @@ def Train():
         log_with="wandb",
         kwargs_handlers=[timeout],
     )
-    # AcceleratorState().deepspeed_plugin.deepspeed_config['train_micro_batch_size_per_gpu'] = 4 #??????
 
+    state = AcceleratorState()
+    
+    state.deepspeed_plugin.deepspeed_config['train_micro_batch_size_per_gpu'] = CFG.BATCH_SIZE #??????
 
     accelerator.init_trackers(
         project_name="Kosmos",
@@ -472,7 +488,7 @@ def Train():
             "learning_rate": CFG.LEARNING_RATE,
             "seq_len": CFG.SEQ_LEN,
         },
-        init_kwargs={"wandb": {"entity": CFG.ENTITY_NAME}},
+        # init_kwargs={"wandb": {"entity": CFG.ENTITY_NAME}},
     )
 
     accelerator.print(f"Total GPUS: {accelerator.num_processes}")
@@ -481,7 +497,7 @@ def Train():
 
     set_seed(CFG.SEED)
 
-    model = Kosmos().to(accelerator.device)
+    model = Kosmos()
 
     print_num_params(model, accelerator)
 
@@ -495,7 +511,7 @@ def Train():
     if CFG.USE_ACTIVATION_CHECKPOINTING:
         activation_checkpointing(model, accelerator)
 
-    # model = accelerator.prepare(model, train_dataloader)
+    model = accelerator.prepare(model)
 
     # dataloaders
 
@@ -508,7 +524,6 @@ def Train():
         train_dataset, batch_size=CFG.BATCH_SIZE, collate_fn=default_data_collator,
     )
 
-    model = accelerator.prepare(model, train_loader)
 
     # optimizer
     optim = decoupled_optimizer(
@@ -517,7 +532,7 @@ def Train():
         weight_decay=CFG.WEIGHT_DECAY, 
         beta_1=0.90, 
         beta_2=0.95, 
-        optimizer_type='stable_adamw',  
+        optimizer_type='lion',  
         use_fsdp=True,
         accelerator=accelerator
     )
@@ -532,20 +547,20 @@ def Train():
     NUM_WARMUP_STEPS = int(max_train_steps * 0.01)
     accelerator.print(f"Num warmup steps: {NUM_WARMUP_STEPS}")
 
-    if CFG.USE_DEEPSPEED:
-        lr_scheduler = DummyScheduler(
-            optim, 
-            total_num_steps=max_train_steps * accelerator.num_processes, 
-            warmup_num_steps=NUM_WARMUP_STEPS
-        )
-    else:
-        lr_scheduler = get_lr_scheduler_with_warmup(
-            optimizer=optim,
-            scheduler_type="cosine",
-            num_warmup_steps=NUM_WARMUP_STEPS,
-            max_train_steps=max_train_steps,
-            grad_accumulate_every=CFG.GRADIENT_ACCUMULATE_EVERY,
-        )
+    # if False: # if CFG.USE_DEEPSPEED:
+    #     lr_scheduler = DummyScheduler(
+    #         optim, 
+    #         total_num_steps=max_train_steps * accelerator.num_processes, 
+    #         warmup_num_steps=NUM_WARMUP_STEPS
+    #     )
+    # else:
+    lr_scheduler = get_lr_scheduler_with_warmup(
+        optimizer=optim,
+        scheduler_type="cosine",
+        num_warmup_steps=NUM_WARMUP_STEPS,
+        max_train_steps=max_train_steps,
+        grad_accumulate_every=CFG.GRADIENT_ACCUMULATE_EVERY,
+    )
 
     # prepare
 
@@ -626,6 +641,12 @@ def Train():
         if completed_steps >= max_train_steps:
             break
 
+        #logging every CFG.LOGGING STEPS
+        if CFG.LOGGING_STEPS > 0 and step % CFG.LOGGING_STEPS == 0:
+            logger.info(
+                f"Step: {completed_steps}/{max_train_steps}, Loss: {loss.item():.5f}"
+            )
+
     # end training
 
     # accelerator.print(f"Training Finished")
@@ -657,6 +678,6 @@ def main():
     dist.init_process_group(backend='nccl') #init_method="env://")
     
     Train()
-#
+
 if __name__ == '__main__':
     main()
