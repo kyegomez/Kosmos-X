@@ -30,7 +30,7 @@ def test_multihead_attention():
 
         # Time the forward pass
         start_time = time.time()
-        output = multihead_attention(query, key, value)
+        multihead_attention(query, key, value)
         end_time = time.time()
         print(f'Time taken for forward pass: {end_time - start_time} seconds')
 

@@ -3,18 +3,15 @@ import data
 from torchscale.architecture.config import DecoderConfig
 from torchscale.architecture.decoder import Decoder
 from torchscale.component.embedding import PositionalEmbedding
-from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast, Wav2Vec2Processor
-from tokenizers import SentencePieceBPETokenizer
+from transformers import T5Tokenizer
 # from transformers import Data2VecForCTC, Wav2Vec2Processor
 
 from flamingo_pytorch import PerceiverResampler
-from PIL import Image
-from torch.nn import Embedding, Module
+from torch.nn import Module
 import bitsandbytes
 
 #video
 #preprecoess videos and tokenize them -> projection layer to transform the video features into the required embedding dimension
-from torchvision import transforms
 # from torchvision.models.video import r3d_18
 
 from Imagebind.models import imagebind_model
@@ -90,11 +87,11 @@ class Kosmos(Module):
     def __init__(self):
         super().__init__()
         # embedding model
-        imageBind = imagebind_model.imagebind_huge(pretrained=True)
+        imagebind_model.imagebind_huge(pretrained=True)
 
-        vision_embeddings = {ModalityType.VISION : data.load_and_transform_vision_data(image_paths, device)} 
-        audio_embeddings = {ModalityType.AUDIO: data.load_and_transform_audio_data(audio_paths, device)}
-        video_embeddings = {ModalityType.VIDEO: data.load_and_transform_video_data(video_paths, device)}
+        {ModalityType.VISION : data.load_and_transform_vision_data(image_paths, device)} 
+        {ModalityType.AUDIO: data.load_and_transform_audio_data(audio_paths, device)}
+        {ModalityType.VIDEO: data.load_and_transform_video_data(video_paths, device)}
 
 
 

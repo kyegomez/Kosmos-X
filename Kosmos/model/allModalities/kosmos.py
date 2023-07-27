@@ -33,10 +33,10 @@ class BaseTokenizer:
         raise NotImplementedError('This method should be implemented in a subclass')
     
     def process(self, data):
-        raise NotImplemented("This method should be implemented in a subclass")
+        raise NotImplementedError("This method should be implemented in a subclass")
     
     def embed(self, data):
-        raise NotImplemented("This method should be implemented in a subclass")
+        raise NotImplementedError("This method should be implemented in a subclass")
 
 
 class ModalityDetector:
@@ -83,7 +83,7 @@ class TokenizerFactory:
         matching_models = list_models(filter=modality)
 
         if not matching_models:
-            raise ValueError(f"No matching Tokenizer for modality")
+            raise ValueError("No matching Tokenizer for modality")
 
         # select the first matching tokenizer and instante it [make selection more favorable with most liked]
         selected_model = matching_models[0]

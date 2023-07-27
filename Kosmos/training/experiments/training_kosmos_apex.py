@@ -5,15 +5,12 @@ from accelerate.utils import set_seed
 from datasets import load_dataset
 from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
-from transformers import get_scheduler, default_data_collator, get_linear_schedule_with_warmup
-from torch.optim import AdamW
+from transformers import default_data_collator, get_linear_schedule_with_warmup
 
 from .kosmos import Kosmos, KosmosTokenizer
 from accelerate import Accelerator
 
 from rich.progress import Progress
-from datasets import Image
-from bitsandbytes.optim import AdamW8bit
 
 
 

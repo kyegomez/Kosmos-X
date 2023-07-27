@@ -1,6 +1,5 @@
 import unittest
 import torch
-import time
 from Kosmos.model import Kosmos, KosmosTokenizer
 from Kosmos.utils.stable_adamw import StableAdamWUnfused
 

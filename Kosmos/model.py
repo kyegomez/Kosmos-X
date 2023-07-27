@@ -3,12 +3,10 @@
 import logging
 import torch
 import torch.nn as nn
-from torch.nn import Embedding, Module
-from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast, AutoTokenizer
-from tokenizers import SentencePieceBPETokenizer
+from torch.nn import Module
+from transformers import CLIPProcessor, CLIPModel, AutoTokenizer
 
 from flamingo_pytorch import PerceiverResampler
-from PIL import Image
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 

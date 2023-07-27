@@ -5,7 +5,7 @@ import math
 
 import torch
 import torch.nn.functional as F
-from torch import nn, einsum, Tensor
+from torch import nn, Tensor
 try:
     from apex.normalization import FusedLayerNorm as LayerNorm
 except ModuleNotFoundError:
@@ -13,10 +13,9 @@ except ModuleNotFoundError:
 
 from .multiway_network import MultiwayWrapper
 from .xpos_relative_position import XPOS
-from einops.layers.torch import Rearrange
 
 from inspect import isfunction
-from einops import rearrange, repeat, reduce
+from einops import rearrange
 
 from dataclasses import dataclass
 

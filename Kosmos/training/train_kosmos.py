@@ -5,16 +5,14 @@ from datetime import timedelta
 from functools import partial
 from itertools import chain
 
-import torch 
 from accelerate import Accelerator
 from accelerate.utils import InitProcessGroupKwargs
 from datasets import concatenate_datasets, load_dataset
 from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (
     CheckpointImpl, apply_activation_checkpointing, checkpoint_wrapper)
-from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from transformers import (AutoTokenizer, default_data_collator,
+from transformers import (default_data_collator,
                           get_cosine_schedule_with_warmup,
                           get_linear_schedule_with_warmup, set_seed)
 #sd
@@ -53,7 +51,7 @@ def fsdp_activation_checkpointing(
     model, accelerator: Accelerator, offload_to_cpu=False
 ):
 
-    accelerator.print(f"Using FSDP activation checkpointing")
+    accelerator.print("Using FSDP activation checkpointing")
 
     # check_fn = lambda submodule: isinstance(submodule, ParallelTransformerBlock)
 

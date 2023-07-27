@@ -3,17 +3,13 @@ import time
 import torch
 from accelerate.utils import set_seed
 from datasets import load_dataset
-from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
-from transformers import get_scheduler, default_data_collator, get_linear_schedule_with_warmup
-from torch.optim import AdamW
+from transformers import default_data_collator, get_linear_schedule_with_warmup
 
 from kosmos import Kosmos, KosmosTokenizer
 from accelerate import Accelerator
 
 from rich.progress import Progress
-from datasets import Image
-from bitsandbytes.optim import AdamW8bit
 from lion_pytorch import Lion
 
 # to use Fullyshardeddataparalle
@@ -29,14 +25,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 #optimizations
 from apex import amp 
-from torch.utils.checkpoint import checkpoint 
-from nvidia.utils.checkpoint import checkpoint 
-from deepseed import DeepSpeedEngine, DeepSpeedConfig
-from torch.cuda.amp import autocast, GradScaler
-from torch_xla.distributed.parallel_loader import ParallelLoader
-from torch_xla.core.xla_model import xm
-from torchlars import LARS
-from torch.nn.utils import prune
+from torch.cuda.amp import GradScaler
 
 
 def save_model_to_s3(model, bucket_name, key_prefix, step):
@@ -111,10 +100,9 @@ def train(args):
 
 
     #gradient accumulation steps
-    accumulation_steps = 4
 
     #add gradient scaler for mixed precision training
-    scaler = GradScaler()
+    GradScaler()
 
 
     tokenizer = KosmosTokenizer()
@@ -160,7 +148,7 @@ def train(args):
 
 
 
-    train_loader = iter(train_dataloader)
+    iter(train_dataloader)
     epoch_loss = 0
     total_loss = 0
     start_time = time.time()

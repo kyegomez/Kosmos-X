@@ -11,8 +11,6 @@ from model.kosmos import Kosmos, KosmosTokenizer
 from accelerate import Accelerator
 
 from rich.progress import Progress
-from datasets import Image
-from bitsandbytes.optim import AdamW8bit
 from lion_pytorch import Lion
 
 
@@ -21,7 +19,6 @@ import torch.distributed as dist
 
 
 #logging
-import boto3
 
 
 #training

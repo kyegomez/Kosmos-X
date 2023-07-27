@@ -18,17 +18,16 @@ from torchscale.architecture.decoder import Decoder
 from torchscale.component.embedding import PositionalEmbedding
 import bitsandbytes
 from flamingo_pytorch import PerceiverResampler
-from concurrent.futures import ThreadPoolExecutor
 
 class BaseTokenizer:
     def tokenize(self, data):
         raise NotImplementedError('This method should be implemented in a subclass')
     
     def process(self, data):
-        raise NotImplemented("This method should be implemented in a subclass")
+        raise NotImplementedError("This method should be implemented in a subclass")
     
     def embed(self, data):
-        raise NotImplemented("This method should be implemented in a subclass")
+        raise NotImplementedError("This method should be implemented in a subclass")
 
 
 class ModalityDetector:

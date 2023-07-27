@@ -213,10 +213,10 @@ class BaseTokenizer:
         raise NotImplementedError('This method should be implemented in a subclass')
     
     def process(self, data):
-        raise NotImplemented("This method should be implemented in a subclass")
+        raise NotImplementedError("This method should be implemented in a subclass")
     
     def embed(self, data):
-        raise NotImplemented("This method should be implemented in a subclass")
+        raise NotImplementedError("This method should be implemented in a subclass")
 
 
 class ModalityDetector:

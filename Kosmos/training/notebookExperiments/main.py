@@ -2,14 +2,12 @@ import torch
 from torchscale.architecture.config import DecoderConfig
 from torchscale.architecture.decoder import Decoder
 from torchscale.component.embedding import PositionalEmbedding
-from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast
-from tokenizers import SentencePieceBPETokenizer
+from transformers import T5Tokenizer, CLIPProcessor, CLIPModel
 from transformers import Wav2Vec2Tokenizer
 from transformers import Wav2Vec2Model
 
 from flamingo_pytorch import PerceiverResampler
-from PIL import Image
-from torch.nn import Embedding, Module
+from torch.nn import Module
 import bitsandbytes
 
 
@@ -167,19 +165,15 @@ from accelerate.utils import set_seed
 from datasets import load_dataset
 from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
-from transformers import get_scheduler, default_data_collator, get_linear_schedule_with_warmup
-from torch.optim import AdamW
+from transformers import default_data_collator, get_linear_schedule_with_warmup
 
 # from kosmos import Kosmos, KosmosTokenizer
 from accelerate import Accelerator
 
 from rich.progress import Progress
-from datasets import Image
-from bitsandbytes.optim import AdamW8bit
 from lion_pytorch import Lion
 
 
-from torch.nn.parallel import DataParallel, DistributedDataParallel
 import torch.distributed as dist
 
 AWS_ACCESS_KEY_ID= 'AKIA5K4H36GT5EVDX2MA'

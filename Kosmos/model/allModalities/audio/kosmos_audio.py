@@ -2,14 +2,12 @@ import torch
 from torchscale.architecture.config import DecoderConfig
 from torchscale.architecture.decoder import Decoder
 from torchscale.component.embedding import PositionalEmbedding
-from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast
-from tokenizers import SentencePieceBPETokenizer
+from transformers import T5Tokenizer, CLIPProcessor, CLIPModel
 from transformers import Wav2Vec2Tokenizer
 from transformers import Wav2Vec2Model
 
 from flamingo_pytorch import PerceiverResampler
-from PIL import Image
-from torch.nn import Embedding, Module
+from torch.nn import Module
 import bitsandbytes
 
 

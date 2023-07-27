@@ -2,8 +2,7 @@ import torch
 from torchscale.architecture.config import DecoderConfig
 from torchscale.architecture.decoder import Decoder
 from torchscale.component.embedding import PositionalEmbedding
-from transformers import T5Tokenizer, CLIPProcessor, CLIPModel, PreTrainedTokenizerFast
-from tokenizers import SentencePieceBPETokenizer
+from transformers import T5Tokenizer, CLIPProcessor, CLIPModel
 from transformers import Wav2Vec2Tokenizer
 from transformers import Wav2Vec2Model
 
