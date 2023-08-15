@@ -274,4 +274,3 @@ class KosmosLanguage(Module):
         return self.decoder(model_input, passed_x=model_input)[0]
     
 
-class KosmosHigh
