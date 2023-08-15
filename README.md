@@ -1,5 +1,7 @@
 # Kosmos-X: Advanced Multi-Modality AI Model 🚀🌌
 
+![Kosmos-X Next Generation Multi-Modality AI Model](/Kosmos-X-banner.png)
+
 [![GitHub issues](https://img.shields.io/github/issues/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/issues) 
 [![GitHub forks](https://img.shields.io/github/forks/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/network) 
 [![GitHub stars](https://img.shields.io/github/stars/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/stargazers) 
@@ -15,8 +17,6 @@
 [![Share on Pinterest](https://img.shields.io/badge/-Share%20on%20Pinterest-red)](https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&media=https%3A%2F%2Fexample.com%2Fimage.jpg&description=Kosmos-X%20-%20the%20next%20generation%20AI%20shields) 
 [![Share on WhatsApp](https://img.shields.io/badge/-Share%20on%20WhatsApp-green)](https://api.whatsapp.com/send?text=Check%20out%20Kosmos-X%20-%20the%20next%20generation%20AI%20shields%20%23Kosmos-X%20%23AI%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X)
 
-
-![Kosmos-X Next Generation Multi-Modality AI Model](/Kosmos-X-banner.png)
 
 Kosmos-X is a groundbreaking modular Multi-Modality AI model designed to seamlessly process diverse forms of data, including:
 
