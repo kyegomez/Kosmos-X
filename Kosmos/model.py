@@ -1,5 +1,3 @@
-
-# Remaining imports
 import logging
 import torch
 import torch.nn as nn
@@ -274,3 +272,6 @@ class KosmosLanguage(Module):
     def forward(self, text_tokens, **kwargs):
         model_input = self.decoder.forward_embedding(text_tokens)[0]
         return self.decoder(model_input, passed_x=model_input)[0]
+    
+
+class KosmosHigh
