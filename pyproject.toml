@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "KosmosX"
+version = "0.0.3"
+description = "Kosmos-X - PyTorch"
+authors = ["Kye Gomez <kye@apac.ai>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/kyegomez/Kosmos-X"
+keywords = ["artificial intelligence", "deep learning", "optimizers", "Prompt Engineering"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+transformers = "*"
+torch = "*"
+bitsandbytes = "*"
+flamingo_pytorch = "*"
+pillow = "*"
+accelerate = "*"
+datasets = "*"
+rich = "*"
+tensorboard = "*"
+wandb = "*"
+boto3 = "*"
+lion-pytorch = "*"
+fairscale = "*"
+
+[tool.poetry.dev-dependencies]
+# You can add development-specific dependencies here, like testing libraries.

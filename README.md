@@ -2,11 +2,26 @@
 
 ![Kosmos-X Next Generation Multi-Modality AI Model](/Kosmos-X-banner.png)
 
+[![GitHub issues](https://img.shields.io/github/issues/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/issues) [![GitHub forks](https://img.shields.io/github/forks/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/network) [![GitHub stars](https://img.shields.io/github/stars/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/stargazers) [![GitHub license](https://img.shields.io/github/license/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/blob/main/LICENSE)
+
+[![Open Bounties](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Fkyegomez%2Fbounties%3Fstatus%3Dopen)](https://console.algora.io/org/kyegomez/bounties?status=open) [![Rewarded Bounties](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Fkyegomez%2Fbounties%3Fstatus%3Dcompleted)](https://console.algora.io/org/kyegomez/bounties?status=completed)
+
+[![Share on Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Share%20%40kyegomez/Kosmos-X)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20AI%20project:%20Kosmos-X&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X) [![Share on Facebook](https://img.shields.io/badge/Share-%20facebook-blue)](https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X) [![Share on LinkedIn](https://img.shields.io/badge/Share-%20linkedin-blue)](https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&title=&summary=&source=)
+
+![Discord](https://img.shields.io/discord/999382051935506503)
+
+
+[![Share on Reddit](https://img.shields.io/badge/-Share%20on%20Reddit-orange)](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&title=Kosmos-X%20-%20the%20next%20generation%20AI%20shields) [![Share on Hacker News](https://img.shields.io/badge/-Share%20on%20Hacker%20News-orange)](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&t=Kosmos-X%20-%20the%20next%20generation%20AI%20shields) [![Share on Pinterest](https://img.shields.io/badge/-Share%20on%20Pinterest-red)](https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&media=https%3A%2F%2Fexample.com%2Fimage.jpg&description=Kosmos-X%20-%20the%20next%20generation%20AI%20shields) [![Share on WhatsApp](https://img.shields.io/badge/-Share%20on%20WhatsApp-green)](https://api.whatsapp.com/send?text=Check%20out%20Kosmos-X%20-%20the%20next%20generation%20AI%20shields%20%23Kosmos-X%20%23AI%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X)
+
+
 Kosmos-X is a groundbreaking modular Multi-Modality AI model designed to seamlessly process diverse forms of data, including:
 
 * Images
 * Videos
 * Audio
+* Any type
+
+At lightspeed with ultra-reliability.
 
 The unique strength of Kosmos-X lies in its ability to process extremely long sequences of these multi-modality inputs, with context lengths of up to 40,000+!
 
@@ -19,43 +34,22 @@ Kosmos-X is now ready for training, and we're actively seeking cloud providers o
 
 ---
 
-<div align="center">
-
-[![GitHub issues](https://img.shields.io/github/issues/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/issues) [![GitHub forks](https://img.shields.io/github/forks/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/network) [![GitHub stars](https://img.shields.io/github/stars/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/stargazers) [![GitHub license](https://img.shields.io/github/license/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/blob/main/LICENSE)
-
-[![Open Bounties](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Fkyegomez%2Fbounties%3Fstatus%3Dopen)](https://console.algora.io/org/kyegomez/bounties?status=open) [![Rewarded Bounties](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Fkyegomez%2Fbounties%3Fstatus%3Dcompleted)](https://console.algora.io/org/kyegomez/bounties?status=completed)
-
-[![Share on Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Share%20%40kyegomez/Kosmos-X)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20AI%20project:%20Kosmos-X&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X) [![Share on Facebook](https://img.shields.io/badge/Share-%20facebook-blue)](https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X) [![Share on LinkedIn](https://img.shields.io/badge/Share-%20linkedin-blue)](https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&title=&summary=&source=)
-
-![Discord](https://img.shields.io/discord/999382051935506503)
-
-
-[![Share on Reddit](https://img.shields.io/badge/-Share%20on%20Reddit-orange)](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&title=Kosmos-X%20-%20the%20next%20generation%20AI%20shields) [![Share on Hacker News](https://img.shields.io/badge/-Share%20on%20Hacker%20News-orange)](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&t=Kosmos-X%20-%20the%20next%20generation%20AI%20shields) [![Share on Pinterest](https://img.shields.io/badge/-Share%20on%20Pinterest-red)](https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X&media=https%3A%2F%2Fexample.com%2Fimage.jpg&description=Kosmos-X%20-%20the%20next%20generation%20AI%20shields) [![Share on WhatsApp](https://img.shields.io/badge/-Share%20on%20WhatsApp-green)](https://api.whatsapp.com/send?text=Check%20out%20Kosmos-X%20-%20the%20next%20generation%20AI%20shields%20%23Kosmos-X%20%23AI%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X)
-
-</div>
+## Appreciation
+* All the creators in Agora, [Join Agora](https://discord.gg/qUtxnK2NMf) the community of AI engineers changing the world with their creations.
+* LucidRains for inspiring me to devote myself to open source AI
 
 ---
 
 Please note that this README.md has been recreated based on the provided information and may not fully reflect the actual content of the linked GitHub repository.
 
-## Usage
-This repo requires [apex](https://github.com/NVIDIA/apex#from-source) to be installed from source:
+## Installation
 ```bash
-
-git clone https://github.com/kyegomez/Kosmos-X
-cd Kosmos-X
-# Basic requirements (transformers, torch, etc.)
-pip install -r requirements.txt
-
-# apex
-git clone https://github.com/NVIDIA/apex
-cd apex
-pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
-
-cd ..
-
-cd Kosmos
+pip install kosmosx
 ```
+
+## Usage
+
+
 
 # Training
 

@@ -4,7 +4,7 @@ from itertools import chain
 
 from datasets import load_dataset
 
-from kosmos.model import KosmosTokenizer
+from kosmosx.model import KosmosTokenizer
 
 
 class BuildDataset:

@@ -6,8 +6,8 @@ from torchvision import datasets, transforms
 import numpy as np
 import tracemalloc
 
-from kosmos.model import Kosmos
-from kosmos.utils.stable_adamw import StableAdamWUnfused
+from kosmosx.model import Kosmos
+from kosmosx.utils.stable_adamw import StableAdamWUnfused
 
 torch.manual_seed(0)
 if torch.cuda.is_available():

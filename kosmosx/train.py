@@ -41,8 +41,8 @@ from transformers import (
     set_seed,
 )
 
-from kosmos.model import Decoder, Kosmos
-from kosmos.utils.stable_adamw import StableAdamWUnfused
+from kosmosx.model import Decoder, Kosmos
+from kosmosx.utils.stable_adamw import StableAdamWUnfused
 
 # state = AcceleratorState()
 

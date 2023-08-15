@@ -8,7 +8,7 @@ from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 from transformers import default_data_collator, get_linear_schedule_with_warmup
 
-from kosmos import Kosmos, KosmosTokenizer
+from kosmosx import Kosmos, KosmosTokenizer
 from accelerate import Accelerator
 
 from rich.progress import Progress
