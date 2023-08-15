@@ -39,8 +39,8 @@ from transformers import (AutoTokenizer, default_data_collator,
                           get_linear_schedule_with_warmup, set_seed)
 
 
-from kosmosutils.stable_adamw import StableAdamWUnfused
-from kosmosmodel import Decoder, Kosmos
+from kosmos.utils.stable_adamw import StableAdamWUnfused
+from kosmos.model import Decoder, Kosmos
 
 ########### SETUP CONFIG
 import torch.distributed as dist

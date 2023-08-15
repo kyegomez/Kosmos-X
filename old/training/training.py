@@ -21,7 +21,7 @@ from lion_pytorch import Lion
 # constants
 # from .kosmos import Kosmos, KosmosTokenizer
 
-from kosmosmodel import Kosmos, KosmosTokenizer
+from kosmos.model import Kosmos, KosmosTokenizer
 
 class CFG:
     BATCH_SIZE: int = 3

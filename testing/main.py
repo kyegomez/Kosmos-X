@@ -1,7 +1,7 @@
 import unittest
 import torch
-from kosmosmodel import Kosmos, KosmosTokenizer
-from kosmosutils.stable_adamw import StableAdamWUnfused
+from kosmos.model import Kosmos, KosmosTokenizer
+from kosmos.utils.stable_adamw import StableAdamWUnfused
 
 class KosmosTest(unittest.TestCase):
 
