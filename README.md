@@ -1,3 +1,5 @@
+[Join Agora](https://discord.gg/qUtxnK2NMf) the community of AI engineers changing the world with their creations.
+
 # Kosmos-X: Advanced Multi-Modality AI Model 🚀🌌
 
 ![Kosmos-X Next Generation Multi-Modality AI Model](/Kosmos-X-banner.png)
