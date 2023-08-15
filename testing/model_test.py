@@ -1,5 +1,5 @@
 import torch
-from Kosmos.model import Kosmos
+from kosmosmodel import Kosmos
 
 # Create a sample text token tensor
 text_tokens = torch.randint(0, 32002, (1, 50), dtype=torch.long)

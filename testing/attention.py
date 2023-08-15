@@ -3,7 +3,7 @@ import time
 from torchinfo import summary
 from pytorch_memlab import LineProfiler
 
-from Kosmos.torchscale.torchscale.component.multihead_attention import MultiheadAttention
+from kosmostorchscale.torchscale.component.multihead_attention import MultiheadAttention
 
 def test_multihead_attention():
     batch_size = 64

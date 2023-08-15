@@ -5899,25 +5899,25 @@ class Kosmos(Module):
 ChatGPT
 I have identified several potential issues in the forward pass of the Kosmos class and other related parts of the code:
 
-In the Kosmos.forward method, the modality variable is calculated but not used. It seems to be redundant, as the forward method already accepts text_tokens, images, audios, videos, and any_modality as input.
+In the kosmosforward method, the modality variable is calculated but not used. It seems to be redundant, as the forward method already accepts text_tokens, images, audios, videos, and any_modality as input.
 
-In the Kosmos.forward method, the text_tokens input is not passed through the KosmosTokenizer. Instead, they are directly passed to the decoder, which might cause inconsistencies in tokenization.
+In the kosmosforward method, the text_tokens input is not passed through the KosmosTokenizer. Instead, they are directly passed to the decoder, which might cause inconsistencies in tokenization.
 
-The KosmosEmbedder class is instantiated and called using parentheses in the forward method of Kosmos. This is incorrect. Instead, the forward method of KosmosEmbedder should be called directly.
+The KosmosEmbedder class is instantiated and called using parentheses in the forward method of kosmos This is incorrect. Instead, the forward method of KosmosEmbedder should be called directly.
 
 The KosmosTokenizer.tokenize_texts method does not use the return_tensors="pt" argument when calling the tokenizer. This could lead to issues when concatenating tensors.
 
 In the ModalityDetector.detect_modality_from_content method, the content-based modality detection is not implemented. This could lead to unexpected behavior when using this method.
 
-The Kosmos.forward method does not seem to handle the case where any_modality input is empty. An empty check should be added before processing the any_modality data.
+The kosmosforward method does not seem to handle the case where any_modality input is empty. An empty check should be added before processing the any_modality data.
 
 The KosmosTokenizer.tokenize_videos method does not handle the case where videos input is empty. An empty check should be added before processing the videos data.
 
-In the Kosmos.forward method, the audios tensor is not passed through the KosmosTokenizer. Instead, it is directly passed to the Data2VecForCTC model, which might cause inconsistencies in tokenization.
+In the kosmosforward method, the audios tensor is not passed through the KosmosTokenizer. Instead, it is directly passed to the Data2VecForCTC model, which might cause inconsistencies in tokenization.
 
 In the KosmosTokenizer.tokenize_texts method, the media_tokens tensor is concatenated directly with the texts tensor. This might cause issues with the tokenization of the input data.
 
-The Kosmos.forward method does not handle the case where videos input is empty. An empty check should be added before processing the videos data.
+The kosmosforward method does not handle the case where videos input is empty. An empty check should be added before processing the videos data.
 
 These are some areas in the code that can potentially cause issues or bugs. To fix these issues, you might need to revise the code and ensure that the tokenization and processing of the input data are consistent across different modalities.
 

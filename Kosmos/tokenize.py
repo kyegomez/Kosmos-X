@@ -2,7 +2,7 @@ import multiprocessing
 import argparse
 from itertools import chain
 from datasets import load_dataset
-from Kosmos.model import KosmosTokenizer
+from kosmosmodel import KosmosTokenizer
 
 class BuildDataset:
     def __init__(self, seed=42, seq_len=8192, hf_account="YOUR HUGGINGFACE API KEY", dataset_name="uggingFaceM4/VQAv2"):
