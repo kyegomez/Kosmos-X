@@ -11,9 +11,9 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 
 # Check if the modules are available
 try:
-    from torchscale.architecture.config import DecoderConfig
-    from torchscale.architecture.decoder import Decoder
-    from torchscale.component.embedding import PositionalEmbedding
+    from kosmosx.torchscale.architecture.config import DecoderConfig
+    from kosmosx.torchscale.architecture.decoder import Decoder
+    from kosmosx.torchscale.component.embedding import PositionalEmbedding
     import bitsandbytes
 except ImportError as e:
     logging.error(f"Failed to import module: {e}")
