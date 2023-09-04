@@ -67,6 +67,8 @@ images = torch.randn(1, 3, 224, 224)
 # Instantiate the model
 model = Kosmos()
 
+text_tokens = text_tokens.long()
+
 # Pass the sample tensors to the model's forward function
 output = model.forward(
     text_tokens=text_tokens,

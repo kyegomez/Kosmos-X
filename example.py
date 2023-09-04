@@ -1,17 +1,20 @@
 import torch
 from kosmosx.model import Kosmos
 
-# Initialize the model
+# Create a sample text token tensor with dtype torch.long
+text_tokens = torch.randint(0, 32002, (1, 50), dtype=torch.long)
+
+# Create a sample image tensor
+images = torch.randn(1, 3, 224, 224)
+
+# Instantiate the model
 model = Kosmos()
 
-# Create dummy data
-batch_size = 4
-dummy_images = torch.randn(batch_size, 3, 224, 224)  # Simulating random images
-text_length = 100  # Arbitrary length for text tokens
-dummy_text_tokens = torch.randint(0, 32002, (batch_size, text_length)).long()  # Simulating random text tokens
+# Pass the sample tensors to the model's forward function
+output = model.forward(
+    text_tokens=text_tokens,
+    images=images
+)
 
-# Pass the dummy data to the model
-outputs = model(text_tokens=dummy_text_tokens, images=dummy_images)
-
-print(outputs.shape)  # Check the shape of the outputs
-
+# Print the output from the model
+print(f"Output: {output}")
