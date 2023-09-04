@@ -182,7 +182,12 @@ class Kosmos(nn.Module):
         self.image_proj = nn.Linear(1024, 2048, bias=False)
         nn.init.normal_(self.image_proj.weight, mean=0, std=2048**-0.5)
 
-    def forward(self, text_tokens: torch.Tensor, images: torch.Tensor, **kwargs):
+    def forward(
+            self, 
+            text_tokens: torch.Tensor, 
+            images: torch.Tensor, 
+            **kwargs
+        ):
         """
        The forward pass for the Kosmos model.
 
