@@ -157,8 +157,6 @@ class Kosmos(nn.Module):
             xpos_rel_pos=True,
             multiway=True,
             max_rel_pos=2048,
-            alibi_pos_bias=True,
-            alibi_num_heads=16,
         )
         
         try:
