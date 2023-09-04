@@ -34,6 +34,8 @@ The unique strength of Kosmos-X lies in its ability to process extremely long se
 ## Model Roadmap
 [Help us create a Model Roadmap on Kosmos-X Figma](https://www.figma.com/file/z3sNPzuB3thdOKT7oml6NI/Kosmos-X?type=whiteboard&node-id=1%3A142&t=Z37mybFxYALukurx-1)
 
+----
+
 ## Ready for Training!
 
 Kosmos-X is now ready for training, and we're actively seeking cloud providers or grant providers to collaborate in training this revolutionary model and eventually release it open source. If you're interested in learning more or supporting this endeavor, please feel free to email me at `kye@apac.ai`.
@@ -45,8 +47,6 @@ Kosmos-X is now ready for training, and we're actively seeking cloud providers o
 * LucidRains for inspiring me to devote myself to open source AI
 
 ---
-
-Please note that this README.md has been recreated based on the provided information and may not fully reflect the actual content of the linked GitHub repository.
 
 ## Installation
 ```bash
@@ -235,10 +235,22 @@ I had to make some slight changes to the decoder to allow it to accept already e
 -)
 ```
 
-### Training
+
+---
+
+
+### Dataset Strategy
+
+
+
+
+
+
+# Training
 
 * We're actively seeking cloud providers or grant providers to train this all-new revolutionary model and release it open source, if you would like to learn more please email me at kye@apac.ai
 
+----
 
 ### TODO
 
