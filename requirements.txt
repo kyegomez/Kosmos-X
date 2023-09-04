@@ -14,3 +14,4 @@ fairscale
 torchinfo
 pytorch-memlab
 torchscale
+hidet

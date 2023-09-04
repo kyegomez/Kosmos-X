@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "KosmosX"
-version = "0.0.7"
+version = "0.0.8"
 description = "Kosmos-X - PyTorch"
 authors = ["Kye Gomez <kye@apac.ai>"]
 license = "MIT"
@@ -35,6 +35,7 @@ boto3 = "*"
 lion-pytorch = "*"
 fairscale = "*"
 torchscale = "*"
+hidet = "*"
 
 [tool.poetry.dev-dependencies]
 # You can add development-specific dependencies here, like testing libraries.
