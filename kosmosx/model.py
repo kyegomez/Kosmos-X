@@ -21,6 +21,7 @@ except ImportError as e:
     logging.error(f"Failed to import module: {e}")
     raise
 
+
 class KosmosTokenizer:
     """
     A tokenizer class for the kosmos model
@@ -60,7 +61,12 @@ class KosmosTokenizer:
             A tuple containing the tokenized texts and only the text tokens.
         """
         try:
-            texts =  self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True).input_ids
+            texts =  self.tokenizer(
+                texts, 
+                return_tensors="pt", 
+                padding=True, 
+                truncation=True
+            ).input_ids
             # Add image tokens to text as "<s> <image> </image> text </s>"
             image_tokens = torch.tensor([[self.im_idx, self.im_end_idx]] * texts.shape[0])
             return torch.cat([texts[:, 0:1], image_tokens, texts[:, 1:]], dim=1), texts
@@ -110,6 +116,7 @@ class KosmosTokenizer:
         except Exception as e:
             logging.error(f"Failed to tokenize sample: {e}")
             raise
+
 
 class Kosmos(nn.Module):
     """
