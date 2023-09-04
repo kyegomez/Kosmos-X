@@ -2,7 +2,7 @@
 
 # Kosmos-X: Advanced Multi-Modality AI Model 🚀🌌
 
-![Kosmos-X Next Generation Multi-Modality AI Model](kosmos-banner.png)
+![Kosmos-X Next Generation Multi-Modality AI Model](images/kosmos-banner.png)
 
 [![GitHub issues](https://img.shields.io/github/issues/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/issues) 
 [![GitHub forks](https://img.shields.io/github/forks/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/network) 
