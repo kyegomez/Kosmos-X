@@ -13,3 +13,4 @@ lion-pytorch
 fairscale
 torchinfo
 pytorch-memlab
+torchscale
