@@ -273,6 +273,7 @@ Here is a markdown table with metadata for the datasets mentioned in the paper:
 | CUB | Image classification | 200 bird species | [TOG 2011](https://vision.cornell.edu/se3/wp-content/uploads/2013/03/CUB_200_2011.pdf) |
 
 
+----
 
 # Training
 
