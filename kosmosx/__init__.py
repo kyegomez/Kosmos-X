@@ -1,1 +1,1 @@
-from kosmosx.model import KosmosTokenizer, Kosmos, BuildDataset, 
+from kosmosx.model import KosmosTokenizer, Kosmos, BuildDataset
