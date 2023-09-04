@@ -1,14 +1,13 @@
-[![Multi-Modality](agorabanner.png)](https://discord.gg/qUtxnK2NMf)
+[![Multi-Modality](images/agorabanner.png)](https://discord.gg/qUtxnK2NMf)
 
 # Kosmos-X: Advanced Multi-Modality AI Model 🚀🌌
 
-![Kosmos-X Next Generation Multi-Modality AI Model](/Kosmos-X-banner.png)
+![Kosmos-X Next Generation Multi-Modality AI Model](kosmos-banner.png)
 
 [![GitHub issues](https://img.shields.io/github/issues/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/issues) 
 [![GitHub forks](https://img.shields.io/github/forks/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/network) 
 [![GitHub stars](https://img.shields.io/github/stars/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/stargazers) 
 [![GitHub license](https://img.shields.io/github/license/kyegomez/Kosmos-X)](https://github.com/kyegomez/Kosmos-X/blob/main/LICENSE)
-
 
 [![Share on Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Share%20%40kyegomez/Kosmos-X)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20AI%20project:%20Kosmos-X&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X) 
 [![Share on Facebook](https://img.shields.io/badge/Share-%20facebook-blue)](https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X) 
