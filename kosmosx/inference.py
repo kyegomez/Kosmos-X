@@ -1,8 +1,9 @@
-import torch
-import hidet
-from transformers import AutoTokenizer
-from einops._torch_specific import allow_ops_in_compiled_graph
 import argparse
+
+import hidet
+import torch
+from einops._torch_specific import allow_ops_in_compiled_graph
+from transformers import AutoTokenizer
 
 
 def Inference():

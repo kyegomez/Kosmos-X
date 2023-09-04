@@ -1,20 +1,20 @@
 import logging
+
 import torch
 import torch.nn as nn
-from torch.nn import Module
-from transformers import CLIPProcessor, CLIPModel, AutoTokenizer
-
 from flamingo_pytorch import PerceiverResampler
+from torch.nn import Module
+from transformers import AutoTokenizer, CLIPModel, CLIPProcessor
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 # Check if the modules are available
 try:
+    import bitsandbytes
     from torchscale.architecture.config import DecoderConfig
     from torchscale.architecture.decoder import Decoder
     from torchscale.component.embedding import PositionalEmbedding
-    import bitsandbytes
 except ImportError as e:
     logging.error(f"Failed to import module: {e}")
     raise
@@ -29,7 +29,6 @@ class KosmosTokenizer:
         im_idx: (int): The Index of the "<image>" token.
         im_end_idx (int): The index of the "</image>" token.
     """
-
     def __init__(self):
         try:
             self.processor = CLIPProcessor.from_pretrained("laion/CLIP-ViT-L-14-laion2B-s32B-b82K")
@@ -271,7 +270,11 @@ class KosmosLanguage(Module):
         )
 
 
-    def forward(self, text_tokens, **kwargs):
+    def forward(
+            self, 
+            text_tokens, 
+            **kwargs
+        ):
         model_input = self.decoder.forward_embedding(text_tokens)[0]
         return self.decoder(model_input, passed_x=model_input)[0]
     
