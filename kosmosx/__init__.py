@@ -1,2 +1,2 @@
 from kosmosx.model import KosmosTokenizer, Kosmos
-from kosmosx.inference import BuildDataset
+from kosmosx.tokenize import BuildDataset
