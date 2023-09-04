@@ -242,7 +242,36 @@ I had to make some slight changes to the decoder to allow it to accept already e
 ### Dataset Strategy
 
 
+Here is a markdown table with metadata for the datasets mentioned in the paper:
 
+| Dataset | Description | Size | Link | 
+|-|-|-|-|
+| The Pile | Diverse English text corpus | 800 GB | [Huggingface](https://huggingface.co/datasets/the_pile) |
+| Common Crawl | Web crawl data | - | [Common Crawl](https://commoncrawl.org/) |  
+| LAION-400M | Image-text pairs from Common Crawl | 400M pairs | [Huggingface](https://huggingface.co/datasets/laion400m) |  
+| LAION-2B | Image-text pairs from Common Crawl | 2B pairs | [ArXiv](https://arxiv.org/abs/2112.05251) |
+| COYO | Image-text pairs from Common Crawl | 700M pairs | [Github](https://github.com/clovaai/coyo) |  
+| Conceptual Captions | Image-alt text pairs | 15M pairs | [ArXiv](https://arxiv.org/abs/2103.01950) |
+| Interleaved CC Data | Text and images from Common Crawl | 71M docs | Custom dataset |
+| StoryCloze | Commonsense reasoning | 16k examples | [ACL Anthology](https://aclanthology.org/W17-0906/) |
+| HellaSwag | Commonsense NLI | 70k examples | [ArXiv](https://arxiv.org/abs/1905.02875) |
+| Winograd Schema | Word ambiguity | 273 examples | [PKRR 2012](https://doi.org/10.24963/kr.2012/26) |
+| Winogrande | Word ambiguity | 1.7k examples | [AAAI 2020](https://arxiv.org/abs/1907.10641) |  
+| PIQA | Physical commonsense QA | 16k examples | [AAAI 2020](https://arxiv.org/abs/1911.11641) |
+| BoolQ | QA | 15k examples | [ACL 2019](https://aclanthology.org/N19-1246/) |
+| CB | Natural language inference | 250 examples | [Sinn und Bedeutung 2019](https://semanticsarchive.net/Archive/DlZGNjZm/) | 
+| COPA | Causal reasoning | 1k examples | [AAAI Spring Symposium 2011](https://www.aaai.org/ocs/index.php/SSS/SSS11/paper/download/2418/2874) |
+| RelativeSize | Commonsense reasoning | 486 pairs | [ArXiv 2016](https://arxiv.org/abs/1602.00753) |
+| MemoryColor | Commonsense reasoning | 720 examples | [ArXiv 2021](https://arxiv.org/abs/2109.11321) |
+| ColorTerms | Commonsense reasoning | 320 examples | [ACL 2012](https://aclanthology.org/P12-2018/) |
+| IQ Test | Nonverbal reasoning | 50 examples | Custom dataset |
+| COCO Captions | Image captioning | 413k images | [PAMI 2015](https://doi.org/10.1109/TPAMI.2014.2366765) |  
+| Flickr30k | Image captioning | 31k images | [TACL 2014](https://aclanthology.org/Q14-1010/) |
+| VQAv2 | Visual QA | 1M QA pairs | [CVPR 2017](https://openaccess.thecvf.com/content_cvpr_2017/papers/Goyal_Making_the_V_CVPR_2017_paper.pdf) |  
+| VizWiz | Visual QA | 31k QA pairs | [CVPR 2018](https://openaccess.thecvf.com/content_cvpr_2018/papers/Gurari_VizWiz_Grand_Challenge_CVPR_2018_paper.pdf) |
+| WebSRC | Web QA | 1.4k examples | [EMNLP 2021](https://aclanthology.org/2021.emnlp-main.261/) |  
+| ImageNet | Image classification | 1.28M images | [CVPR 2009](https://doi.org/10.1109/CVPRW.2009.5206848) |
+| CUB | Image classification | 200 bird species | [TOG 2011](https://vision.cornell.edu/se3/wp-content/uploads/2013/03/CUB_200_2011.pdf) |
 
 
 
