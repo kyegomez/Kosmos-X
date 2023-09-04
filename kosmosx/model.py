@@ -6,8 +6,10 @@ from flamingo_pytorch import PerceiverResampler
 from torch.nn import Module
 from transformers import AutoTokenizer, CLIPModel, CLIPProcessor
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
+logging.basicConfig(
+    level=logging.DEBUG, 
+    format='%(asctime)s - %(levelname)s - %(message)s'
+    )
 
 # Check if the modules are available
 try:

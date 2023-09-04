@@ -6,6 +6,7 @@ text_tokens = torch.randint(0, 32002, (1, 50), dtype=torch.long)
 
 # Create a sample image tensor
 images = torch.randn(1, 3, 224, 224)
+images = images.long()
 
 # Instantiate the model
 model = Kosmos()
