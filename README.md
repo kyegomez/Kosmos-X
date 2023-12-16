@@ -63,7 +63,7 @@ They encode images to image features using a CLIP VIT-L/14 model and use a [perc
 
 We follow the hyperparameters described in the paper visible in the following image:
 
-![KOSMOS-1 Hyperparameters](./hyperparams.png)
+![KOSMOS-1 Hyperparameters](./images/hyperparams.png)
 
 ## Details
 ### Model (decoder)
