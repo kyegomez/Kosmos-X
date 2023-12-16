@@ -11,16 +11,24 @@ def Inference():
 
     torch.hub._validate_not_a_forked_repo = lambda a, b, c: True
 
-    parser = argparse.ArgumentParser(description="Generate text using PaLM model")
+    parser = argparse.ArgumentParser(
+        description="Generate text using PaLM model"
+    )
     parser.add_argument("prompt", type=str, help="Text prompt to generate text")
     parser.add_argument(
-        "--seq_len", type=int, default=256, help="Sequence length for generated text"
+        "--seq_len",
+        type=int,
+        default=256,
+        help="Sequence length for generated text",
     )
     parser.add_argument(
         "--temperature", type=float, default=0.8, help="Sampling temperature"
     )
     parser.add_argument(
-        "--filter_thres", type=float, default=0.9, help="Filter threshold for sampling"
+        "--filter_thres",
+        type=float,
+        default=0.9,
+        help="Filter threshold for sampling",
     )
     parser.add_argument(
         "--model",
@@ -38,9 +46,8 @@ def Inference():
 
     args = parser.parse_args()
 
-
     dtype = torch.float32
-    if args.dtype == 'bf16':
+    if args.dtype == "bf16":
         dtype = torch.bfloat16
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -48,7 +55,7 @@ def Inference():
     model = torch.hub.load("andromeda", args.model).to(device).to(dtype).eval()
 
     hidet.torch.dynamo_config.use_tensor_core(True)
-    hidet.torch.dynamo_config.search_space(2) 
+    hidet.torch.dynamo_config.search_space(2)
 
     opt_model = torch.compile(model, backend="hidet")
 
@@ -67,7 +74,9 @@ def Inference():
         use_tqdm=True,
     )
 
-    decoded_output = tokenizer.batch_decode(output_tensor, skip_special_tokens=True)
+    decoded_output = tokenizer.batch_decode(
+        output_tensor, skip_special_tokens=True
+    )
 
     return decoded_output
 

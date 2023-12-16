@@ -11,7 +11,7 @@ from transformers import (
     Data2VecForCTC,
     T5Tokenizer,
     Wav2Vec2Processor,
-    list_models
+    list_models,
 )
 
 # Add additional imports
@@ -26,17 +26,22 @@ from flamingo_pytorch import PerceiverResampler
 # from kosmos import Kosmos, KosmosEmbedder, KosmosTokenizer
 
 
-
-#baseclass should contain the core methods for tokenizing processing and embedding input data 
+# baseclass should contain the core methods for tokenizing processing and embedding input data
 class BaseTokenizer:
     def tokenize(self, data):
-        raise NotImplementedError('This method should be implemented in a subclass')
-    
+        raise NotImplementedError(
+            "This method should be implemented in a subclass"
+        )
+
     def process(self, data):
-        raise NotImplementedError("This method should be implemented in a subclass")
-    
+        raise NotImplementedError(
+            "This method should be implemented in a subclass"
+        )
+
     def embed(self, data):
-        raise NotImplementedError("This method should be implemented in a subclass")
+        raise NotImplementedError(
+            "This method should be implemented in a subclass"
+        )
 
 
 class ModalityDetector:
@@ -57,19 +62,17 @@ class ModalityDetector:
         _, file_extension = os.path.splitext(self.input_data)
         file_extension = file_extension.lower()
 
-        if file_extension in ['.jpg', '.jpeg', '.png', '.bmp']:
-            return 'image'
-        elif file_extension in ['.wav', '.mp3', '.ogg']:
-            return 'audio'
-        elif file_extension in [".txt", '.md', '.json']:
-            return 'text'
+        if file_extension in [".jpg", ".jpeg", ".png", ".bmp"]:
+            return "image"
+        elif file_extension in [".wav", ".mp3", ".ogg"]:
+            return "audio"
+        elif file_extension in [".txt", ".md", ".json"]:
+            return "text"
 
     def detect_modality_from_content(self):
         # implement logic to determine modality based on content analysis
         # this part requires a content-based modality detection model or algo
         pass
-
-
 
 
 class TokenizerFactory:
@@ -90,7 +93,7 @@ class TokenizerFactory:
         tokenizer = AutoTokenizer.from_pretrained(selected_model)
 
         return tokenizer
-    
+
 
 class ModalityProcessor:
     def __init__(self, modality_detector):
@@ -108,21 +111,25 @@ class ModalityProcessor:
             tokenizer = self.tokenizer_factory.create_tokenizer(modality)
             self.modalities[modality] = tokenizer
 
-        tokens = tokenizer(data, return_tensors="pt", padding=True, truncation=True)
+        tokens = tokenizer(
+            data, return_tensors="pt", padding=True, truncation=True
+        )
 
         return tokens
-    
+
 
 class KosmosEmbedder(torch.nn.Module):
     def __init__(self, modality):
         super().__init__()
-        self.modality = modality 
+        self.modality = modality
         self.tokenizer = AutoTokenizer.from_pretrained(modality)
         self.model = AutoModel.from_pretrained(modality)
         self.proj = torch.nn.Linear(self.model.config.hidden_size, 2048)
 
     def forward(self, data):
-        tokens = self.tokenizer(data, return_tensors="pt", padding=True, truncation=True)
+        tokens = self.tokenizer(
+            data, return_tensors="pt", padding=True, truncation=True
+        )
         output = self.model(**tokens)
         embed = self.proj(output.last_hidden_state)
 
@@ -131,101 +138,142 @@ class KosmosEmbedder(torch.nn.Module):
 
 class KosmosTokenizer:
     def __init__(self):
-        self.processor = CLIPProcessor.from_pretrained("laion/CLIP-ViT-L-14-laion2B-s32B-b82K")
-        self.audio_tokenizer = Wav2Vec2Processor.from_pretrained("facebook/data2vec-audio-base-960h")
-        #video
+        self.processor = CLIPProcessor.from_pretrained(
+            "laion/CLIP-ViT-L-14-laion2B-s32B-b82K"
+        )
+        self.audio_tokenizer = Wav2Vec2Processor.from_pretrained(
+            "facebook/data2vec-audio-base-960h"
+        )
+        # video
         self.tokenizer = T5Tokenizer.from_pretrained(
             "t5-large",
-            additional_special_tokens=["<image>", "</image>", "<audio>", "</audio>", "<video>", "</video>", "<any>", "</any>"],
+            additional_special_tokens=[
+                "<image>",
+                "</image>",
+                "<audio>",
+                "</audio>",
+                "<video>",
+                "</video>",
+                "<any>",
+                "</any>",
+            ],
             extra_ids=0,
-            model_max_length=1984
+            model_max_length=1984,
         )
-        self.video_transform = transforms.Compose([
-            transforms.Resize((112, 112)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.43216, 0.394666, 0.37645], std=[0.22803, 0.22145, 0.216989])
-        ])
-        self.vid_idx, self.vid_end_ix = self.tokenizer.convert_tokens_to_ids(["<video>", "</video>"])
-        self.audio_idx, self.audio_end_idx = self.tokenizer.convert_tokens_to_ids(["<audio>", "</audio>"])
-        self.im_idx, self.im_end_idx = self.tokenizer.convert_tokens_to_ids(["<image>", "</image>"])
-        self.any_idx, self.any_end_idx = self.tokenizer.convert_tokens_to_ids(["<any>", "</any>"])
-
-
-        
+        self.video_transform = transforms.Compose(
+            [
+                transforms.Resize((112, 112)),
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=[0.43216, 0.394666, 0.37645],
+                    std=[0.22803, 0.22145, 0.216989],
+                ),
+            ]
+        )
+        self.vid_idx, self.vid_end_ix = self.tokenizer.convert_tokens_to_ids(
+            ["<video>", "</video>"]
+        )
+        self.audio_idx, self.audio_end_idx = (
+            self.tokenizer.convert_tokens_to_ids(["<audio>", "</audio>"])
+        )
+        self.im_idx, self.im_end_idx = self.tokenizer.convert_tokens_to_ids(
+            ["<image>", "</image>"]
+        )
+        self.any_idx, self.any_end_idx = self.tokenizer.convert_tokens_to_ids(
+            ["<any>", "</any>"]
+        )
 
     def tokenize_texts(self, texts):
-        texts =  self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True).input_ids
+        texts = self.tokenizer(
+            texts, return_tensors="pt", padding=True, truncation=True
+        ).input_ids
         # Add image and audio tokens to text as "<s> <image> </image> <audio> </audio> text </s>"
-        # media_tokens = torch.tensor([[self.im_idx, self.im_end_idx, self.audio_idx, self.audio_end_idx, self.vid_idx, self.vid_end_idx, self.any_idx, self.any_end_idx]] * texts.shape[0])        
+        # media_tokens = torch.tensor([[self.im_idx, self.im_end_idx, self.audio_idx, self.audio_end_idx, self.vid_idx, self.vid_end_idx, self.any_idx, self.any_end_idx]] * texts.shape[0])
         # return torch.cat([texts[:, 0:1], media_tokens, texts[:, 1:]], dim=1), texts
-        media_tokens = torch.tensor([[self.im_idx, self.im_end_idx, self.audio_idx, self.audio_end_idx, self.vid_idx, self.vid_end_idx, self.any_idx, self.any_end_idx]] * texts.shape[0])
-        return torch.cat([texts[:, 0:1], media_tokens, texts[:, 1:]], dim=1), texts
-    
+        media_tokens = torch.tensor(
+            [
+                [
+                    self.im_idx,
+                    self.im_end_idx,
+                    self.audio_idx,
+                    self.audio_end_idx,
+                    self.vid_idx,
+                    self.vid_end_idx,
+                    self.any_idx,
+                    self.any_end_idx,
+                ]
+            ]
+            * texts.shape[0]
+        )
+        return (
+            torch.cat([texts[:, 0:1], media_tokens, texts[:, 1:]], dim=1),
+            texts,
+        )
+
     def tokenize_images(self, images):
         return self.processor(images=images, return_tensors="pt").pixel_values
-    
+
     def tokenize_audio(self, audios):
-        return self.audio_tokenizer(audios, return_tensors="pt", padding=True, truncation=True).input_values
-    
+        return self.audio_tokenizer(
+            audios, return_tensors="pt", padding=True, truncation=True
+        ).input_values
+
     def tokenize_videos(self, videos):
         processed_videos = []
         for video in videos:
             video_frames = [self.video_transform(frame) for frame in video]
             processed_videos.append(torch.stack(video_frames))
         return torch.stack(processed_videos)
-    
 
     def tokenize(self, sample):
-        text_tokens, only_text_tokens = self.tokenize_texts(sample["target_text"])
+        text_tokens, only_text_tokens = self.tokenize_texts(
+            sample["target_text"]
+        )
         attention_mask = text_tokens != self.tokenizer.pad_token_id
         dummy_image_features = torch.ones((text_tokens.shape[0], 64))
-        attention_mask = torch.cat([dummy_image_features, attention_mask], dim=1)
+        attention_mask = torch.cat(
+            [dummy_image_features, attention_mask], dim=1
+        )
         return {
             "text_tokens": text_tokens,
             "images": self.tokenize_images(sample["image"]),
             "labels": only_text_tokens,
             "attention_mask": attention_mask,
             "audios": self.tokenize_audio(sample["audio"]),
-            "videos": self.tokenize_videos(sample["video"])
+            "videos": self.tokenize_videos(sample["video"]),
         }
-    
+
 
 class Kosmos(Module):
     def __init__(self, modality, modality_detector):
         super().__init__()
         # Instantiate Clip Vit-l/14
-        self.clip_model = CLIPModel.from_pretrained("laion/CLIP-ViT-L-14-laion2B-s32B-b82K").vision_model
+        self.clip_model = CLIPModel.from_pretrained(
+            "laion/CLIP-ViT-L-14-laion2B-s32B-b82K"
+        ).vision_model
 
-        #audio model
-        self.audio_model = Data2VecForCTC.from_pretrained("facebook/data2vec-audio-base-960h")
+        # audio model
+        self.audio_model = Data2VecForCTC.from_pretrained(
+            "facebook/data2vec-audio-base-960h"
+        )
 
-        #video
+        # video
         self.video_model = r3d_18(pretrained=True)
-        self.video_model = torch.nn.Sequential(*list(self.video_model.children())[:-1])
+        self.video_model = torch.nn.Sequential(
+            *list(self.video_model.children())[:-1]
+        )
 
         self.modality_detector = modality_detector
         self.tokenizer = KosmosTokenizer()
         self.processor = ModalityProcessor(modality_detector)
         self.embedder = KosmosEmbedder(modality)
 
-
-
-
-
         self.embed = bitsandbytes.nn.modules.Embedding(
-            32002,
-            2048,
-            padding_idx=1
+            32002, 2048, padding_idx=1
         )
-        self.embed_positions= PositionalEmbedding(
-            2048,
-            2048,
-            1
-        )
+        self.embed_positions = PositionalEmbedding(2048, 2048, 1)
 
-        self.output_projection = torch.nn.Linear(
-            2048, 32002, bias=False
-        )
+        self.output_projection = torch.nn.Linear(2048, 32002, bias=False)
         torch.nn.init.normal_(
             self.output_projection.weight, mean=0, std=2048**-0.5
         )
@@ -242,40 +290,36 @@ class Kosmos(Module):
             vocab_size=64007,
             subln=True,
             xpos_rel_pos=True,
-            max_rel_pos=2048
+            max_rel_pos=2048,
         )
         self.decoder = Decoder(
             self.config,
             embed_tokens=self.embed,
             embed_positions=self.embed_positions,
-            output_projection=self.output_projection
+            output_projection=self.output_projection,
         )
 
         self.perceive = PerceiverResampler(
-            dim = 1024,
-            depth = 2,
-            dim_head = 64,
-            heads = 8,
-            num_latents = 64,
-            num_media_embeds = 257
+            dim=1024,
+            depth=2,
+            dim_head=64,
+            heads=8,
+            num_latents=64,
+            num_media_embeds=257,
         )
 
         self.image_proj = torch.nn.Linear(1024, 2048, bias=False)
-        torch.nn.init.normal_(
-            self.image_proj.weight, mean=0, std=2048**-0.5
-        )
+        torch.nn.init.normal_(self.image_proj.weight, mean=0, std=2048**-0.5)
 
         self.audio_proj = torch.nn.Linear(768, 2048, bias=False)
-        torch.nn.init.normal_(
-            self.audio_proj.weight, mean=0, std=2048 ** -0.5
-        )
+        torch.nn.init.normal_(self.audio_proj.weight, mean=0, std=2048**-0.5)
 
         self.video_proj = torch.nn.Linear(512, 2048, bias=False)
-        torch.nn.init.normal_(
-            self.video_proj.weight, mean=0, std=2048 ** -0.5
-        )
+        torch.nn.init.normal_(self.video_proj.weight, mean=0, std=2048**-0.5)
 
-    def forward(self, text_tokens, images, audios, videos, any_modality, **kwargs):
+    def forward(
+        self, text_tokens, images, audios, videos, any_modality, **kwargs
+    ):
         modality = self.modality_detector.get_modality(data)
 
         images = self.clip_model(pixel_values=images)["last_hidden_state"]
@@ -287,14 +331,13 @@ class Kosmos(Module):
         audios = audios.mean(dim=1)
         audios = self.audio_proj(audios)
 
-
-        #process video tokens
+        # process video tokens
         videos = videos.transpose(1, 2).contigous()
         videos = self.video_model(videos)
         videos = videos.view(videos.size(0), -1)
         videos = self.video_proj(videos)
 
-        #process any modality
+        # process any modality
         any_embeddings = []
         for modality_data in any_modality:
             modality = modality_data["modality"]
@@ -304,21 +347,29 @@ class Kosmos(Module):
             any_embeddings.append(embed)
         any_embeddings = torch.stack(any_embeddings)
 
-        
-
-        #v1
+        # v1
         # Concatenate text tokens and media tokens
         # model_input = self.decoder.forward_embedding(text_tokens)[1]
         # model_input = torch.cat([model_input[:, 0:6], images, audios, videos, model_input[:, 6:]], dim=1)
         # model_input = self.decoder.forward_embedding(model_input, token_embedding=model_input)[0]
-        
 
-        #v2 any modality tokens
+        # v2 any modality tokens
         model_input = self.decoder.forward_embedding(text_tokens)[1]
-        model_input = torch.cat([model_input[:, 0:6], images, audios, videos, any_embeddings, model_input[:, 6:]], dim=1)
-        model_input = self.decoder.forward_embedding(model_input, token_embedding=model_input)[0]
+        model_input = torch.cat(
+            [
+                model_input[:, 0:6],
+                images,
+                audios,
+                videos,
+                any_embeddings,
+                model_input[:, 6:],
+            ],
+            dim=1,
+        )
+        model_input = self.decoder.forward_embedding(
+            model_input, token_embedding=model_input
+        )[0]
 
         return self.decoder(model_input, passed_x=model_input)[0]
-
 
         # return self.decoder(model_input, passed_x=model_input)[0]

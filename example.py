@@ -12,10 +12,7 @@ images = images.long()
 model = Kosmos()
 
 # Pass the sample tensors to the model's forward function
-output = model.forward(
-    text_tokens=text_tokens,
-    images=images
-)
+output = model.forward(text_tokens=text_tokens, images=images)
 
 # Print the output from the model
 print(f"Output: {output}")

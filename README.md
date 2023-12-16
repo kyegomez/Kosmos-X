@@ -277,23 +277,7 @@ Here is a markdown table with metadata for the datasets mentioned in the paper:
 
 ----
 
-# Training
-
-* We're actively seeking cloud providers or grant providers to train this all-new revolutionary model and release it open source, if you would like to learn more please email me at kye@apac.ai
-
-----
-
-### TODO
-
-* Integrate flash attention inside the `torchscale/component/multihead_attention.py`
-
-* Integrate one write head is all you need
-
-* Look into integrating qk_norm
-
-* Look into integrating Falcon LLM model tokenizer if they allow special tokens
-
-* Prepare datasets, training strategies, and infrastructure for massive production level traning
-
-* Run tests and make sure trains well with all optimizations on small dataset
-
+## Todo
+- [ ] Implement tokenizer for multi-modal processing
+- [ ] Refactor training script
+- [ ] Train 7B

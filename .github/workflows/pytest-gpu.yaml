@@ -21,7 +21,6 @@ on:
       python-version:
         required: false
         type: string
-        default: 3.9
     secrets:
       mcloud-api-key:
         required: true

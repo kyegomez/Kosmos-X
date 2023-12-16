@@ -42,18 +42,19 @@ from transformers import (
 )
 
 from kosmosx.model import Decoder, Kosmos
-from kosmosx.utils.stable_adamw import StableAdamWUnfused
+from zeta.optim import StableAdamWUnfused
 
 # state = AcceleratorState()
 
 
 logger = get_logger(__name__, log_level="INFO")
 
+
 class CFG:
     BATCH_SIZE = 1
     GRADIENT_ACCUMULATE_EVERY: int = 1
     SEED: int = 42
-    LEARNING_RATE: float = 1e-4 #3e-4 # 1e-4 for lion
+    LEARNING_RATE: float = 1e-4  # 3e-4 # 1e-4 for lion
     WEIGHT_DECAY: float = 0.1
     SEQ_LEN: int = 8192
     NUM_CPU: int = multiprocessing.cpu_count()
@@ -63,7 +64,7 @@ class CFG:
     USE_ACTIVATION_CHECKPOINTING: bool = True
     RESUME_FROM_CHECKPOINT: str = False
     CHECKPOINTING_STEPS: int = 1000
-    OUTPUT_DIR: str = 'checkpoints/' # Folder
+    OUTPUT_DIR: str = "checkpoints/"  # Folder
     ENTITY_NAME: str = "Kosmos"
     LOGGING_STEPS: int = 100
 
@@ -95,8 +96,10 @@ def activation_checkpointing(
     """
     if accelerator is not None:
         accelerator.print("Using activation checkpointing")
+
     def check_fn(submodule):
         return isinstance(submodule, Decoder)
+
     non_reentrant_wrapper = partial(
         checkpoint_wrapper,
         offload_to_cpu=offload_to_cpu,
@@ -168,22 +171,20 @@ def fsdp(
         )
     else:
         raise ValueError(
-            "Invalid scheduler_type. Expected 'bf16', 'fp16' or 'fp32', got: {}".format(
-                mp
-            )
+            "Invalid scheduler_type. Expected 'bf16', 'fp16' or 'fp32', got: {}"
+            .format(mp)
         )
 
     if shard_strat == "SHARD_GRAD":
-        sharding_strat_fsdp = ShardingStrategy.SHARD_GRAD_OP 
+        sharding_strat_fsdp = ShardingStrategy.SHARD_GRAD_OP
     elif shard_strat == "FULL_SHARD":
         sharding_strat_fsdp = ShardingStrategy.FULL_SHARD
     elif shard_strat == "NO_SHARD":
         sharding_strat_fsdp = ShardingStrategy.NO_SHARD
     else:
         raise ValueError(
-            "Invalid scheduler_type. Expected 'SHARD_GRAD', 'FULL_SHARD' or 'NO_SHARD', got: {}".format(
-                shard_strat
-            )
+            "Invalid scheduler_type. Expected 'SHARD_GRAD', 'FULL_SHARD' or"
+            " 'NO_SHARD', got: {}".format(shard_strat)
         )
 
     model = FullyShardedDataParallel(
@@ -245,9 +246,8 @@ def get_lr_scheduler_with_warmup(
         )
     else:
         raise ValueError(
-            "Invalid scheduler_type. Expected 'linear' or 'cosine', got: {}".format(
-                scheduler_type
-            )
+            "Invalid scheduler_type. Expected 'linear' or 'cosine', got: {}"
+            .format(scheduler_type)
         )
 
 
@@ -357,7 +357,6 @@ def decoupled_optimizer(
     # Iterate over the no_decay list, which contains the names of the parameters without weight decay.
     for param in no_decay:
         try:
-                
             # Append the corresponding parameter from param_dict to the no_decay_param list.
             no_decay_param.append(param_dict[param])
         except KeyError:
@@ -374,14 +373,28 @@ def decoupled_optimizer(
 
     # Create a variable called optimizer that stores an instance of the optimizer.
     if optimizer_type == "lion":
-        optimizer = Lion(grouped_params, lr=learning_rate, betas=(beta_1, beta_2),)
+        optimizer = Lion(
+            grouped_params,
+            lr=learning_rate,
+            betas=(beta_1, beta_2),
+        )
     elif optimizer_type == "adamw":
-        optimizer = AdamW(grouped_params, lr=learning_rate, betas=(beta_1, beta_2),)
+        optimizer = AdamW(
+            grouped_params,
+            lr=learning_rate,
+            betas=(beta_1, beta_2),
+        )
     elif optimizer_type == "deepspeed":
-        optimizer = DummyOptim(grouped_params, lr=learning_rate, betas=(beta_1, beta_2),)
+        optimizer = DummyOptim(
+            grouped_params,
+            lr=learning_rate,
+            betas=(beta_1, beta_2),
+        )
     elif optimizer_type == "stable_adamw":
         optimizer = StableAdamWUnfused(
-            grouped_params, lr=learning_rate, betas=(beta_1, beta_2),
+            grouped_params,
+            lr=learning_rate,
+            betas=(beta_1, beta_2),
         )
     # elif optimizer_type=="Adam8bit":
     #     optimizer = bnb.optim.Adam8bit(grouped_params, lr=learning_rate, betas=(beta_1, beta_2))
@@ -389,9 +402,8 @@ def decoupled_optimizer(
     #     optimizer = bnb.optim.Lion8bit(grouped_params, lr=learning_rate, betas=(beta_1, beta_2))
     else:
         raise ValueError(
-            "Invalid optimizer_type. Expected 'lion', 'adamw', 'deepspeed' or 'stable_adamw', got: {}".format(
-                optimizer_type
-            )
+            "Invalid optimizer_type. Expected 'lion', 'adamw', 'deepspeed' or"
+            " 'stable_adamw', got: {}".format(optimizer_type)
         )
 
     # Return the optimizer.
@@ -418,7 +430,9 @@ def build_dataloaders():
     dataset = load_dataset("openwebtext", split="train")
 
     tokenized_dataset = dataset.map(
-        lambda example: tokenizer([t + tokenizer.eos_token for t in example["text"]]),
+        lambda example: tokenizer(
+            [t + tokenizer.eos_token for t in example["text"]]
+        ),
         batched=True,
         num_proc=CFG.NUM_CPU,
         remove_columns=["text"],
@@ -429,7 +443,9 @@ def build_dataloaders():
     # Main data processing function that will concatenate all texts from our dataset and generate chunks of block_size.
     def group_texts(examples):
         # Concatenate all texts.
-        concatenated_examples = {k: list(chain(*examples[k])) for k in examples.keys()}
+        concatenated_examples = {
+            k: list(chain(*examples[k])) for k in examples.keys()
+        }
         total_length = len(concatenated_examples[list(examples.keys())[0]])
         # We drop the small remainder, we could add padding if the model supported it instead of this drop, you can
         # customize this part to your needs.
@@ -437,27 +453,34 @@ def build_dataloaders():
             total_length = (total_length // block_size) * block_size
         # Split by chunks of max_len.
         result = {
-            k: [t[i : i + block_size] for i in range(0, total_length, block_size)]
+            k: [
+                t[i : i + block_size]
+                for i in range(0, total_length, block_size)
+            ]
             for k, t in concatenated_examples.items()
         }
         return result
 
     train_dataset = tokenized_dataset.map(
-        group_texts, batched=True, num_proc=CFG.NUM_CPU,
+        group_texts,
+        batched=True,
+        num_proc=CFG.NUM_CPU,
     )
 
     return train_dataset
 
-#switch to falconwebdataset
+
+# switch to falconwebdataset
 def build_pre_tokenized():
-    d0 = load_dataset("conceptofmind/c4_0-to-20_neox_with_eos_8k", split="train[:10]")
+    d0 = load_dataset(
+        "conceptofmind/c4_0-to-20_neox_with_eos_8k", split="train[:10]"
+    )
     # d1 = load_dataset("conceptofmind/c4_21-to-40_neox_with_eos_8k", split="train")
     # d2 = load_dataset("conceptofmind/c4_41-to-60_neox_with_eos_8k", split="train")
     # d3 = load_dataset("conceptofmind/c4_61-to-80_neox_with_eos_8k", split="train")
     # d4 = load_dataset("conceptofmind/c4_81-to-100_neox_with_eos_8k", split="train")
     # train_dataset = concatenate_datasets([d0, d1, d2, d3, d4])
     return d0
-
 
 
 def Train():
@@ -473,8 +496,10 @@ def Train():
     )
 
     state = AcceleratorState()
-    
-    state.deepspeed_plugin.deepspeed_config['train_micro_batch_size_per_gpu'] = CFG.BATCH_SIZE #??????
+
+    state.deepspeed_plugin.deepspeed_config[
+        "train_micro_batch_size_per_gpu"
+    ] = CFG.BATCH_SIZE  # ??????
 
     accelerator.init_trackers(
         project_name="Kosmos",
@@ -498,11 +523,7 @@ def Train():
     print_num_params(model, accelerator)
 
     if CFG.USE_FSDP:
-        model = fsdp(
-            model,
-            mp="fp16",
-            shard_strat="SHARD_GRAD"
-        )
+        model = fsdp(model, mp="fp16", shard_strat="SHARD_GRAD")
 
     if CFG.USE_ACTIVATION_CHECKPOINTING:
         activation_checkpointing(model, accelerator)
@@ -517,25 +538,28 @@ def Train():
         train_dataset = build_dataloaders()
 
     train_loader = DataLoader(
-        train_dataset, batch_size=CFG.BATCH_SIZE, collate_fn=default_data_collator,
+        train_dataset,
+        batch_size=CFG.BATCH_SIZE,
+        collate_fn=default_data_collator,
     )
-
 
     # optimizer
     optim = decoupled_optimizer(
         model=model,
-        learning_rate=CFG.LEARNING_RATE, 
-        weight_decay=CFG.WEIGHT_DECAY, 
-        beta_1=0.90, 
-        beta_2=0.95, 
-        optimizer_type='lion',  
+        learning_rate=CFG.LEARNING_RATE,
+        weight_decay=CFG.WEIGHT_DECAY,
+        beta_1=0.90,
+        beta_2=0.95,
+        optimizer_type="lion",
         use_fsdp=True,
-        accelerator=accelerator
+        accelerator=accelerator,
     )
 
     # Determine number of training steps
 
-    max_train_steps = math.ceil(len(train_loader) / CFG.GRADIENT_ACCUMULATE_EVERY)
+    max_train_steps = math.ceil(
+        len(train_loader) / CFG.GRADIENT_ACCUMULATE_EVERY
+    )
     accelerator.print(f"Max train steps: {max_train_steps}")
 
     # lr scheduler
@@ -545,8 +569,8 @@ def Train():
 
     # if False: # if CFG.USE_DEEPSPEED:
     #     lr_scheduler = DummyScheduler(
-    #         optim, 
-    #         total_num_steps=max_train_steps * accelerator.num_processes, 
+    #         optim,
+    #         total_num_steps=max_train_steps * accelerator.num_processes,
     #         warmup_num_steps=NUM_WARMUP_STEPS
     #     )
     # else:
@@ -570,13 +594,17 @@ def Train():
 
     # I do not know why Huggingface recommends recalculation of max_train_steps
 
-    max_train_steps = math.ceil(len(train_loader) / CFG.GRADIENT_ACCUMULATE_EVERY)
+    max_train_steps = math.ceil(
+        len(train_loader) / CFG.GRADIENT_ACCUMULATE_EVERY
+    )
     accelerator.print(f"Max train steps recalculated: {max_train_steps}")
 
     # Total batch size for logging
 
     total_batch_size = (
-        CFG.BATCH_SIZE * accelerator.num_processes * CFG.GRADIENT_ACCUMULATE_EVERY
+        CFG.BATCH_SIZE
+        * accelerator.num_processes
+        * CFG.GRADIENT_ACCUMULATE_EVERY
     )
     accelerator.print(f"Total batch size: {total_batch_size}")
 
@@ -588,8 +616,13 @@ def Train():
     completed_steps = 0
 
     if CFG.RESUME_FROM_CHECKPOINT:
-        if CFG.RESUME_FROM_CHECKPOINT is not None or CFG.RESUME_FROM_CHECKPOINT != "":
-            accelerator.print(f"Resuming from checkpoint {CFG.RESUME_FROM_CHECKPOINT}")
+        if (
+            CFG.RESUME_FROM_CHECKPOINT is not None
+            or CFG.RESUME_FROM_CHECKPOINT != ""
+        ):
+            accelerator.print(
+                f"Resuming from checkpoint {CFG.RESUME_FROM_CHECKPOINT}"
+            )
             accelerator.load_state(CFG.RESUME_FROM_CHECKPOINT)
             path = os.path.basename(CFG.RESUME_FROM_CHECKPOINT)
         training_difference = os.path.splitext(path)[0]
@@ -637,10 +670,11 @@ def Train():
         if completed_steps >= max_train_steps:
             break
 
-        #logging every CFG.LOGGING STEPS
+        # logging every CFG.LOGGING STEPS
         if CFG.LOGGING_STEPS > 0 and step % CFG.LOGGING_STEPS == 0:
             logger.info(
-                f"Step: {completed_steps}/{max_train_steps}, Loss: {loss.item():.5f}"
+                f"Step: {completed_steps}/{max_train_steps}, Loss:"
+                f" {loss.item():.5f}"
             )
 
     # end training
@@ -656,24 +690,26 @@ def Train():
         unwrapped_model = accelerator.unwrap_model(model)
         with accelerator.main_process_first():
             accelerator.save(
-                unwrapped_model.state_dict(), f"{CFG.OUTPUT_DIR}/final/final_model.pt"
+                unwrapped_model.state_dict(),
+                f"{CFG.OUTPUT_DIR}/final/final_model.pt",
             )
 
 
 def main():
-    os.environ['MASTER_ADDR'] #'localhost'
-    os.environ['MASTER_PORT'] #= '9994'
-    
+    os.environ["MASTER_ADDR"]  #'localhost'
+    os.environ["MASTER_PORT"]  # = '9994'
+
     # # [CRITICAL] Pay attention to this when scaling to multiple GPUs and clusters
-    
+
     # # Pay attention to this, use "accelerate config"
 
-    os.environ['RANK']       #= str(0) # Number of nodes (servers)
-    os.environ['WORLD_SIZE'] # = str(torch.cuda.device_count())
+    os.environ["RANK"]  # = str(0) # Number of nodes (servers)
+    os.environ["WORLD_SIZE"]  # = str(torch.cuda.device_count())
 
-    dist.init_process_group(backend='nccl') #init_method="env://")
-    
+    dist.init_process_group(backend="nccl")  # init_method="env://")
+
     Train()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
