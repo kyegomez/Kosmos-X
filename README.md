@@ -19,34 +19,6 @@
 [![Share on WhatsApp](https://img.shields.io/badge/-Share%20on%20WhatsApp-green)](https://api.whatsapp.com/send?text=Check%20out%20Kosmos-X%20-%20the%20next%20generation%20AI%20shields%20%23Kosmos-X%20%23AI%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkyegomez%2FKosmos-X)
 
 
-Kosmos-X is a modular Multi-Modality AI model designed to seamlessly process diverse forms of data, including:
-
-* Images
-* Videos
-* Audio
-* Any type
-
-At lightspeed with ultra-reliability.
-
-The unique strength of Kosmos-X lies in its ability to process extremely long sequences of these multi-modality inputs, with context lengths of up to 40,000+!
-
-## Model Roadmap
-[Help us create a Model Roadmap on Kosmos-X Figma](https://www.figma.com/file/z3sNPzuB3thdOKT7oml6NI/Kosmos-X?type=whiteboard&node-id=1%3A142&t=Z37mybFxYALukurx-1)
-
-----
-
-## Ready for Training!
-
-Kosmos-X is now ready for training, and we're actively seeking cloud providers or grant providers to collaborate in training this revolutionary model and eventually release it open source. If you're interested in learning more or supporting this endeavor, please feel free to email me at `kye@apac.ai`.
-
----
-
-## Appreciation
-* All the creators in Agora, [Join Agora](https://discord.gg/qUtxnK2NMf) the community of AI engineers changing the world with their creations.
-* LucidRains for inspiring me to devote myself to open source AI
-
----
-
 ## Installation
 ```bash
 pip install kosmosx
