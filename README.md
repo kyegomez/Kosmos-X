@@ -253,3 +253,5 @@ Here is a markdown table with metadata for the datasets mentioned in the paper:
 - [ ] Implement tokenizer for multi-modal processing
 - [ ] Refactor training script
 - [ ] Train 7B
+
+# License

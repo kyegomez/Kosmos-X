@@ -4,9 +4,8 @@ import time
 from torchinfo import summary
 from pytorch_memlab import LineProfiler
 
-from kosmosx.torchscale.torchscale.component.multihead_attention import (
-    MultiheadAttention,
-)
+from zeta import MultiheadAttention
+
 
 @pytest.fixture
 def multihead_attention():
@@ -16,15 +15,15 @@ def multihead_attention():
         embed_dim=d_model, num_heads=num_heads, dropout=0.1, flash_attn=True
     )
 
+
 def test_multihead_attention(multihead_attention):
     batch_size = 64
+    d_model = 512
 
     # Choose a set of sequence lengths to test
     sequence_lengths = [2**n for n in range(10, 16)]  # 1024, 2048, ..., 32768
 
     for seq_len in sequence_lengths:
-        print(f"Testing sequence length: {seq_len}")
-
         # Create some dummy data
         query = torch.rand(batch_size, seq_len, d_model)
         key = torch.rand(batch_size, seq_len, d_model)
@@ -34,14 +33,20 @@ def test_multihead_attention(multihead_attention):
         start_time = time.time()
         output = multihead_attention(query, key, value)
         end_time = time.time()
-        print(f"Time taken for forward pass: {end_time - start_time} seconds")
 
         # Assert that output is not None
         assert output is not None
 
+        # Assert that output has the correct shape
+        assert output.shape == (batch_size, seq_len, d_model)
+
         # Compute the FLOPs
-        flops = summary(multihead_attention, input_size=(batch_size, seq_len, d_model))
-        print(f"FLOPs: {flops.total_ops}")
+        flops = summary(
+            multihead_attention, input_size=(batch_size, seq_len, d_model)
+        )
+
+        # Assert that FLOPs are not None
+        assert flops.total_ops is not None
 
         # Compute the memory usage
         profiler = LineProfiler()
