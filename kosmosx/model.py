@@ -3,7 +3,6 @@ import logging
 import torch
 import torch.nn as nn
 from flamingo_pytorch import PerceiverResampler
-from torch.nn import Module
 from transformers import AutoTokenizer, CLIPModel, CLIPProcessor
 
 logging.basicConfig(
@@ -254,35 +253,53 @@ class Kosmos(nn.Module):
             raise
 
 
-class KosmosLanguage(Module):
-    def __init__(self):
-        super().__init__()
+class KosmosLanguage(nn.Module):
+    def __init__(
+        self,
+        vocab_size: int = 64007,
+        dim: int = 2048,
+        depth: int = 24,
+        ffn_dim: int = 8192,
+        dropout: float = 0.1,
+        multiway: bool = True,
+        decoder_heads: int = 32,
+        activation_fn: str = "gelu",
+        subln: bool = True,
+        alibi_pos_bias: bool = True,
+        alibi_num_heads: int = 16,
+        xpos_rel_pos: bool = True,
+        max_rel_pos: int = 2048,
+        *args,
+        **kwargs,
+    ):
+        super(KosmosLanguage, self).__init__()
+
+        # Embedding
         self.embed = bitsandbytes.nn.modules.Embedding(
-            320002, 2048, padding_idx=1
+            vocab_size, dim, padding_idx=1
         )
-
-        self.embed_positions = PositionalEmbedding(2048, 2048, 1)
-
-        self.output_projection = torch.nn.Linear(2048, 32002, bias=False)
+        self.embed_positions = PositionalEmbedding(dim, dim, 1)
+        self.output_projection = torch.nn.Linear(dim, vocab_size, bias=False)
 
         # Config following KOSMOS-1 paper (https://arxiv.org/pdf/2302.14045.pdf)
         self.config = DecoderConfig(
-            decoder_layers=24,
-            decoder_embed_dim=2048,
-            decoder_ffn_embed_dim=8192,
-            decoder_attention_heads=32,
-            dropout=0.1,
-            activation_fn="gelu",
-            attention_dropout=0.1,
-            vocab_size=64007,
-            subln=True,
-            xpos_rel_pos=True,
-            multiway=True,
-            max_rel_pos=2048,
-            alibi_pos_bias=True,
-            alibi_num_heads=16,
+            decoder_layers=depth,
+            decoder_embed_dim=dim,
+            decoder_ffn_embed_dim=ffn_dim,
+            decoder_attention_heads=decoder_heads,
+            dropout=dropout,
+            activation_fn=activation_fn,
+            attention_dropout=dropout,
+            vocab_size=vocab_size,
+            subln=subln,
+            xpos_rel_pos=xpos_rel_pos,
+            multiway=multiway,
+            max_rel_pos=max_rel_pos,
+            alibi_pos_bias=alibi_pos_bias,
+            alibi_num_heads=alibi_num_heads,
         )
 
+        # Decoder
         self.decoder = Decoder(
             self.config,
             embed_tokens=self.embed,
@@ -290,6 +307,14 @@ class KosmosLanguage(Module):
             output_projection=self.output_projection,
         )
 
-    def forward(self, text_tokens, **kwargs):
-        model_input = self.decoder.forward_embedding(text_tokens)[0]
+    def forward(self, x: torch.Tensor, **kwargs) -> torch.Tensor:
+        """Forward pass of the model.
+
+        Args:
+            x (torch.Tensor): _description_
+
+        Returns:
+            torch.Tensor: _description_
+        """
+        model_input = self.decoder.forward_embedding(x, **kwargs)[0]
         return self.decoder(model_input, passed_x=model_input)[0]
