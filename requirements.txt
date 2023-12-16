@@ -9,6 +9,7 @@ rich
 tensorboard
 wandb
 boto3
+zetascale
 lion-pytorch
 fairscale
 torchinfo
