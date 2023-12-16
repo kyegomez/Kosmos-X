@@ -21,7 +21,7 @@
 
 ## Installation
 ```bash
-pip install kosmosx
+pip3 install --upgrade kosmosx
 ```
 
 ## Usage
@@ -255,3 +255,4 @@ Here is a markdown table with metadata for the datasets mentioned in the paper:
 - [ ] Train 7B
 
 # License
+APACHE
